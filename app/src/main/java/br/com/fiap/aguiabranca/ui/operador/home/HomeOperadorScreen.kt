@@ -2,8 +2,6 @@ package br.com.fiap.aguiabranca.ui.operador.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,19 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Lightbulb
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,20 +21,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.fiap.aguiabranca.ui.componentes.CardResumo
+import br.com.fiap.aguiabranca.ui.componentes.BarraNavegacaoOperador
+import br.com.fiap.aguiabranca.ui.componentes.CardEstatistica
+import br.com.fiap.aguiabranca.ui.componentes.CardHeroIdeia
 import br.com.fiap.aguiabranca.ui.theme.AzulPrincipal
-import br.com.fiap.aguiabranca.ui.theme.Branco
 import br.com.fiap.aguiabranca.ui.theme.FundoTela
-import br.com.fiap.aguiabranca.ui.theme.LaranjaAnalise
-import br.com.fiap.aguiabranca.ui.theme.VerdeAprovado
 import br.com.fiap.aguiabranca.viewmodel.HomeOperadorViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 @Composable
 fun HomeOperadorScreen(
@@ -68,41 +54,7 @@ fun HomeOperadorScreen(
 
         bottomBar = {
 
-            BottomAppBar(
-                containerColor = Branco
-            ) {
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = null,
-                        tint = AzulPrincipal
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Lightbulb,
-                        contentDescription = null,
-                        tint = Color.Gray
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = null,
-                        tint = Color.Gray
-                    )
-
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        tint = Color.Gray
-                    )
-                }
-            }
+            BarraNavegacaoOperador()
         },
 
         floatingActionButton = {
@@ -115,7 +67,7 @@ fun HomeOperadorScreen(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = Branco
+                    tint = Color.White
                 )
             }
         }
@@ -129,9 +81,9 @@ fun HomeOperadorScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 20.dp),
 
-            verticalArrangement = Arrangement.spacedBy(18.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp),
 
-            contentPadding = PaddingValues(bottom = 100.dp)
+            contentPadding = PaddingValues(bottom = 120.dp)
         ) {
 
             item {
@@ -141,57 +93,23 @@ fun HomeOperadorScreen(
 
             item {
 
-                Column {
-
-                    Text(
-                        text = "Olá, $nomeUsuario 👋",
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-
-                    Text(
-                        text = "Que bom ver você aqui.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
-                }
+                Text(
+                    text = "Olá, $nomeUsuario 👋",
+                    style = MaterialTheme.typography.headlineMedium
+                )
             }
 
             item {
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
+                Text(
+                    text = "Vamos transformar ideias em resultados.",
+                    color = Color.Gray
+                )
+            }
 
-                    shape = RoundedCornerShape(28.dp),
+            item {
 
-                    colors = CardDefaults.cardColors(
-                        containerColor = AzulPrincipal
-                    ),
-
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 8.dp
-                    )
-                ) {
-
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-
-                        BoxIconeIdeia()
-
-                        Text(
-                            text = "Tem uma ideia inovadora?",
-                            color = Branco,
-                            style = MaterialTheme.typography.headlineSmall
-                        )
-
-                        Text(
-                            text = "Compartilhe suas ideias e ajude a transformar a empresa.",
-                            color = Branco
-                        )
-                    }
-                }
+                CardHeroIdeia()
             }
 
             item {
@@ -204,58 +122,47 @@ fun HomeOperadorScreen(
 
             item {
 
-                CardResumo(
-                    titulo = "Minhas ideias",
-                    valor = quantidadeIdeias,
-                    corCard = AzulPrincipal
-                )
-            }
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
 
-            item {
+                    item {
 
-                CardResumo(
-                    titulo = "Em análise",
-                    valor = quantidadeEmAnalise,
-                    corCard = LaranjaAnalise
-                )
-            }
+                        CardEstatistica(
+                            titulo = "Minhas ideias",
+                            valor = quantidadeIdeias,
+                            cor = AzulPrincipal
+                        )
+                    }
 
-            item {
+                    item {
 
-                CardResumo(
-                    titulo = "Aprovadas",
-                    valor = quantidadeAprovadas,
-                    corCard = VerdeAprovado
-                )
-            }
+                        CardEstatistica(
+                            titulo = "Em análise",
+                            valor = quantidadeEmAnalise,
+                            cor = Color(0xFFF59E0B)
+                        )
+                    }
 
-            item {
+                    item {
 
-                CardResumo(
-                    titulo = "Viraram projeto",
-                    valor = quantidadeViraramProjeto,
-                    corCard = Color(0xFF7B1FA2)
-                )
+                        CardEstatistica(
+                            titulo = "Aprovadas",
+                            valor = quantidadeAprovadas,
+                            cor = Color(0xFF16A34A)
+                        )
+                    }
+
+                    item {
+
+                        CardEstatistica(
+                            titulo = "Projetos",
+                            valor = quantidadeViraramProjeto,
+                            cor = Color(0xFF7C3AED)
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-fun BoxIconeIdeia() {
-
-    Box(
-        modifier = Modifier
-            .clip(CircleShape)
-            .background(Color.White.copy(alpha = 0.2f))
-            .padding(12.dp)
-    ) {
-
-        Icon(
-            imageVector = Icons.Default.Lightbulb,
-            contentDescription = null,
-            tint = Color.Yellow,
-            modifier = Modifier.size(28.dp)
-        )
     }
 }
