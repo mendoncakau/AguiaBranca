@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "br.com.fiap.AguiaBranca"
+    namespace = "br.com.fiap.aguiabranca"
     compileSdk = 36
 
     defaultConfig {
@@ -56,4 +56,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.compose.runtime:runtime")
+
+
+
 }

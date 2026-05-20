@@ -1,4 +1,4 @@
-package br.com.fiap.AguiaBranca
+package br.com.fiap.aguiabranca
 
 import org.junit.Test
 

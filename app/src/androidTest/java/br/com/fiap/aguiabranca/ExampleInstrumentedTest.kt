@@ -1,4 +1,4 @@
-package br.com.fiap.AguiaBranca
+package br.com.fiap.aguiabranca
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
