@@ -5,18 +5,24 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val EsquemaCoresClaro = lightColorScheme(
+private val EsquemaClaro = lightColorScheme(
 
     primary = AzulPrincipal,
 
-    secondary = VerdeAprovado,
+    secondary = AzulClaro,
 
     background = FundoTela,
 
-    surface = Branco
+    surface = Branco,
+
+    onPrimary = Branco,
+
+    onBackground = PretoTexto,
+
+    onSurface = PretoTexto
 )
 
-private val EsquemaCoresEscuro = darkColorScheme(
+private val EsquemaEscuro = darkColorScheme(
 
     primary = AzulPrincipal,
 
@@ -30,20 +36,13 @@ fun AguiaBrancaTheme(
 ) {
 
     val esquemaCores = if (darkTheme) {
-
-        EsquemaCoresEscuro
-
+        EsquemaEscuro
     } else {
-
-        EsquemaCoresClaro
+        EsquemaClaro
     }
 
     MaterialTheme(
-
         colorScheme = esquemaCores,
-
-        typography = Typography,
-
         content = content
     )
 }
