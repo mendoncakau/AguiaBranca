@@ -1,4 +1,4 @@
-package br.com.fiap.aguiabranca.ui.componentes
+    package br.com.fiap.aguiabranca.ui.componentes
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
