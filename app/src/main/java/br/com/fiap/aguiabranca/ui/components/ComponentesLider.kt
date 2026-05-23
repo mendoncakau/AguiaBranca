@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,8 +21,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.unit.Dp
 import br.com.fiap.aguiabranca.ui.theme.*
+import br.com.fiap.aguiabranca.ui.lider.TelaLider
 
-val RoxoLider = Color(0xFF4A148C)
+val RoxoLider = AzulAguaBranca
 
 @Composable
 fun CardMetricaLider(
@@ -69,9 +69,10 @@ fun CardMetricaLider(
 @Composable
 fun TopoTelaLider(
     titulo: String,
-    mostrarFiltro: Boolean = true
+    mostrarFiltro: Boolean = true,
+    textoFiltro: String = "Este mês",
+    onFiltroClick: () -> Unit = {}
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,7 +80,6 @@ fun TopoTelaLider(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Text(
             text = titulo,
             style = MaterialTheme.typography.titleLarge,
@@ -88,14 +88,13 @@ fun TopoTelaLider(
         )
 
         if (mostrarFiltro) {
-
             Surface(
+                onClick = onFiltroClick,
                 shape = RoundedCornerShape(24.dp),
                 color = Color(0xFFEFF1F5)
             ) {
-
                 Text(
-                    text = "Este mês",
+                    text = textoFiltro,
                     modifier = Modifier.padding(
                         horizontal = 16.dp,
                         vertical = 10.dp
@@ -109,16 +108,31 @@ fun TopoTelaLider(
 }
 
 @Composable
-fun BottomBarLider() {
+fun BottomBarLider(
+    telaAtual: TelaLider,
+    onTelaSelecionada: (TelaLider) -> Unit
+) {
     NavigationBar(
         containerColor = Branco,
         tonalElevation = 8.dp
     ) {
         NavigationBarItem(
-            selected = true,
-            onClick = {},
+            selected = telaAtual == TelaLider.DASHBOARD,
+            onClick = { onTelaSelecionada(TelaLider.DASHBOARD) },
             icon = { Icon(Icons.Default.Home, contentDescription = null) },
             label = { Text("Dashboard", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFDCE8FF)
+            )
+        )
+
+        NavigationBarItem(
+            selected = telaAtual == TelaLider.DIRETRIZES,
+            onClick = { onTelaSelecionada(TelaLider.DIRETRIZES) },
+            icon = { Icon(Icons.Default.Flag, contentDescription = null) },
+            label = { Text("Estratégia", maxLines = 1) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
@@ -127,31 +141,27 @@ fun BottomBarLider() {
         )
 
         NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.Flag, contentDescription = null) },
-            label = { Text("Estratégia", maxLines = 1) }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
+            selected = telaAtual == TelaLider.PROJETOS,
+            onClick = { onTelaSelecionada(TelaLider.PROJETOS) },
             icon = { Icon(Icons.Default.Folder, contentDescription = null) },
-            label = { Text("Projetos", maxLines = 1) }
+            label = { Text("Projetos", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFE7D7FF)
+            )
         )
 
         NavigationBarItem(
-            selected = false,
-            onClick = {},
+            selected = telaAtual == TelaLider.RELATORIOS,
+            onClick = { onTelaSelecionada(TelaLider.RELATORIOS) },
             icon = { Icon(Icons.Default.BarChart, contentDescription = null) },
-            label = { Text("Relatórios", maxLines = 1) }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.MoreHoriz, contentDescription = null) },
-            label = { Text("Mais", maxLines = 1) }
+            label = { Text("Relatórios", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFE7D7FF)
+            )
         )
     }
 }

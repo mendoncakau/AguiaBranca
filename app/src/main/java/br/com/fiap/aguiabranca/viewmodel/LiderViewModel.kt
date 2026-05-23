@@ -3,6 +3,7 @@ package br.com.fiap.aguiabranca.viewmodel
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 data class Diretriz(
     val id: Int,
@@ -10,8 +11,7 @@ data class Diretriz(
     val descricao: String
 )
 
-data class ProjetoLider(
-    val id: Int,
+data class Projeto(
     val nome: String,
     val responsavel: String,
     val prioridade: String,
@@ -22,53 +22,88 @@ data class ProjetoLider(
 
 class LiderViewModel : ViewModel() {
 
-    private val _totalIdeias = MutableStateFlow(56)
-    val totalIdeias: StateFlow<Int> = _totalIdeias
-
-    private val _ideiasAprovadas = MutableStateFlow(28)
-    val ideiasAprovadas: StateFlow<Int> = _ideiasAprovadas
-
-    private val _projetosConcluidos = MutableStateFlow(12)
-    val projetosConcluidos: StateFlow<Int> = _projetosConcluidos
-
-    private val _investimentoTotal = MutableStateFlow(120000.0)
-    val investimentoTotal: StateFlow<Double> = _investimentoTotal
-
-    private val _retornoTotal = MutableStateFlow(165000.0)
-    val retornoTotal: StateFlow<Double> = _retornoTotal
-
-    val roiTotal: Double
-        get() = _retornoTotal.value - _investimentoTotal.value
+    private var ultimoId = 4
 
     private val _diretrizes = MutableStateFlow(
         listOf(
-            Diretriz(1, "Reduzir custos operacionais", "Buscar eficiência e diminuir desperdícios."),
-            Diretriz(2, "Melhorar experiência do cliente", "Criar soluções para melhorar o atendimento."),
-            Diretriz(3, "Aumentar eficiência operacional", "Automatizar processos internos.")
+            Diretriz(
+                1,
+                "Reduzir custos operacionais em 15%",
+                "Foco em eficiência e otimização de processos."
+            ),
+            Diretriz(
+                2,
+                "Melhorar experiência do cliente",
+                "Iniciativas voltadas para satisfação."
+            ),
+            Diretriz(
+                3,
+                "Aumentar eficiência operacional",
+                "Buscar produtividade em áreas internas."
+            )
         )
     )
+
     val diretrizes: StateFlow<List<Diretriz>> = _diretrizes
 
-    private val _projetos = MutableStateFlow(
-        listOf(
-            ProjetoLider(1, "Otimização no processo de manutenção", "Ana Paula", "Alta", "Em andamento", 50000.0, 80000.0),
-            ProjetoLider(2, "Redução de papel nas garagens", "Marta Ferreira", "Média", "Concluído", 15000.0, 35000.0),
-            ProjetoLider(3, "Central de atendimento digital", "Carlos Lima", "Baixa", "Em andamento", 30000.0, 50000.0)
-        )
-    )
-    val projetos: StateFlow<List<ProjetoLider>> = _projetos
+    fun adicionarDiretriz(
+        titulo: String,
+        descricao: String
+    ) {
+        ultimoId++
 
-    fun adicionarDiretriz(titulo: String, descricao: String) {
-        val novaDiretriz = Diretriz(
-            id = _diretrizes.value.size + 1,
-            titulo = titulo,
-            descricao = descricao
-        )
+        _diretrizes.update {
+            it + Diretriz(
+                ultimoId,
+                titulo,
+                descricao
+            )
+        }
+    }
 
-        _diretrizes.value = _diretrizes.value + novaDiretriz
+    fun editarDiretriz(
+        id: Int,
+        titulo: String,
+        descricao: String
+    ) {
+        _diretrizes.update { lista ->
+            lista.map {
+                if (it.id == id) {
+                    it.copy(
+                        titulo = titulo,
+                        descricao = descricao
+                    )
+                } else it
+            }
+        }
     }
 
     fun excluirDiretriz(id: Int) {
-        _diretrizes.value = _diretrizes.value.filter { it.id != id }
+        _diretrizes.update {
+            it.filter { item ->
+                item.id != id
+            }
+        }
     }
+
+    val projetos = MutableStateFlow(
+        listOf(
+            Projeto(
+                "Otimização da manutenção",
+                "Ana Paula",
+                "Alta",
+                "Em andamento",
+                45000.0,
+                85000.0
+            ),
+            Projeto(
+                "Redução de papel nas garagens",
+                "Marcos",
+                "Alta",
+                "Concluído",
+                30000.0,
+                90000.0
+            )
+        )
+    )
 }

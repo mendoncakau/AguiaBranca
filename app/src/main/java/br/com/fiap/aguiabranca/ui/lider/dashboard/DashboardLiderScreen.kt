@@ -1,25 +1,13 @@
 package br.com.fiap.aguiabranca.ui.lider.dashboard
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -27,22 +15,52 @@ import androidx.compose.ui.unit.dp
 import br.com.fiap.aguiabranca.ui.components.BottomBarLider
 import br.com.fiap.aguiabranca.ui.components.CardMetricaLider
 import br.com.fiap.aguiabranca.ui.components.LinhaGraficoMock
-import br.com.fiap.aguiabranca.ui.components.TopoTelaLider
-import br.com.fiap.aguiabranca.ui.theme.Branco
-import br.com.fiap.aguiabranca.ui.theme.FundoTela
-import br.com.fiap.aguiabranca.ui.theme.PretoTexto
-import br.com.fiap.aguiabranca.ui.theme.VerdeAprovado
+import br.com.fiap.aguiabranca.ui.lider.TelaLider
+import br.com.fiap.aguiabranca.ui.theme.*
 import br.com.fiap.aguiabranca.viewmodel.LiderViewModel
 
-@Composable
-fun DashboardLiderScreen(viewModel: LiderViewModel = LiderViewModel()) {
+data class DadosDashboardMes(
+    val ideiasEnviadas: Int,
+    val ideiasAprovadas: Int,
+    val projetosConcluidos: Int,
+    val investimento: String,
+    val retorno: String,
+    val roi: String
+)
 
-    val totalIdeias by viewModel.totalIdeias.collectAsState()
-    val ideiasAprovadas by viewModel.ideiasAprovadas.collectAsState()
-    val projetosConcluidos by viewModel.projetosConcluidos.collectAsState()
+@Composable
+fun DashboardLiderScreen(
+    viewModel: LiderViewModel,
+    telaAtual: TelaLider,
+    onTelaSelecionada: (TelaLider) -> Unit
+) {
+    var mesSelecionado by remember { mutableStateOf("Maio") }
+    var menuAberto by remember { mutableStateOf(false) }
+
+    val dadosPorMes = mapOf(
+        "Janeiro" to DadosDashboardMes(22, 8, 3, "R$\n40.000", "R$\n58.000", "R$\n18.000"),
+        "Fevereiro" to DadosDashboardMes(31, 12, 5, "R$\n55.000", "R$\n82.000", "R$\n27.000"),
+        "Março" to DadosDashboardMes(44, 19, 8, "R$\n75.000", "R$\n110.000", "R$\n35.000"),
+        "Abril" to DadosDashboardMes(49, 23, 10, "R$\n98.000", "R$\n138.000", "R$\n40.000"),
+        "Maio" to DadosDashboardMes(56, 28, 12, "R$\n120.000", "R$\n165.000", "R$\n45.000"),
+        "Junho" to DadosDashboardMes(61, 31, 14, "R$\n130.000", "R$\n180.000", "R$\n50.000"),
+        "Julho" to DadosDashboardMes(58, 29, 13, "R$\n125.000", "R$\n172.000", "R$\n47.000"),
+        "Agosto" to DadosDashboardMes(64, 33, 15, "R$\n140.000", "R$\n196.000", "R$\n56.000"),
+        "Setembro" to DadosDashboardMes(69, 36, 16, "R$\n150.000", "R$\n215.000", "R$\n65.000"),
+        "Outubro" to DadosDashboardMes(72, 39, 18, "R$\n165.000", "R$\n238.000", "R$\n73.000"),
+        "Novembro" to DadosDashboardMes(76, 42, 20, "R$\n178.000", "R$\n260.000", "R$\n82.000"),
+        "Dezembro" to DadosDashboardMes(80, 45, 22, "R$\n190.000", "R$\n285.000", "R$\n95.000")
+    )
+
+    val dados = dadosPorMes[mesSelecionado] ?: dadosPorMes["Maio"]!!
 
     Scaffold(
-        bottomBar = { BottomBarLider() },
+        bottomBar = {
+            BottomBarLider(
+                telaAtual = telaAtual,
+                onTelaSelecionada = onTelaSelecionada
+            )
+        },
         containerColor = FundoTela
     ) { paddingValues ->
 
@@ -55,7 +73,48 @@ fun DashboardLiderScreen(viewModel: LiderViewModel = LiderViewModel()) {
                 .verticalScroll(rememberScrollState())
         ) {
 
-            TopoTelaLider("Dashboard estratégico")
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 22.dp, bottom = 22.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Dashboard estratégico",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Box {
+                    AssistChip(
+                        onClick = { menuAberto = true },
+                        label = { Text(mesSelecionado) },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = null
+                            )
+                        }
+                    )
+
+                    DropdownMenu(
+                        expanded = menuAberto,
+                        onDismissRequest = { menuAberto = false }
+                    ) {
+                        dadosPorMes.keys.forEach { mes ->
+                            DropdownMenuItem(
+                                text = { Text(mes) },
+                                onClick = {
+                                    mesSelecionado = mes
+                                    menuAberto = false
+                                }
+                            )
+                        }
+                    }
+                }
+            }
 
             BoxWithConstraints {
                 val alturaCard = if (maxWidth < 360.dp) 120.dp else 112.dp
@@ -64,26 +123,9 @@ fun DashboardLiderScreen(viewModel: LiderViewModel = LiderViewModel()) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    CardMetricaLider(
-                        titulo = "Ideias\nenviadas",
-                        valor = totalIdeias.toString(),
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    CardMetricaLider(
-                        titulo = "Aprovadas",
-                        valor = ideiasAprovadas.toString(),
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    CardMetricaLider(
-                        titulo = "Projetos\nconcluídos",
-                        valor = projetosConcluidos.toString(),
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
+                    CardMetricaLider("Ideias\nenviadas", dados.ideiasEnviadas.toString(), altura = alturaCard, modifier = Modifier.weight(1f))
+                    CardMetricaLider("Aprovadas", dados.ideiasAprovadas.toString(), altura = alturaCard, modifier = Modifier.weight(1f))
+                    CardMetricaLider("Projetos\nconcluídos", dados.projetosConcluidos.toString(), altura = alturaCard, modifier = Modifier.weight(1f))
                 }
             }
 
@@ -105,27 +147,9 @@ fun DashboardLiderScreen(viewModel: LiderViewModel = LiderViewModel()) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    CardMetricaLider(
-                        titulo = "Investimento",
-                        valor = "R$\n120.000",
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    CardMetricaLider(
-                        titulo = "Retorno total",
-                        valor = "R$\n165.000",
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
-
-                    CardMetricaLider(
-                        titulo = "ROI total",
-                        valor = "R$\n45.000",
-                        corValor = VerdeAprovado,
-                        altura = alturaCard,
-                        modifier = Modifier.weight(1f)
-                    )
+                    CardMetricaLider("Investimento", dados.investimento, altura = alturaCard, modifier = Modifier.weight(1f))
+                    CardMetricaLider("Retorno total", dados.retorno, altura = alturaCard, modifier = Modifier.weight(1f))
+                    CardMetricaLider("ROI total", dados.roi, corValor = VerdeAprovado, altura = alturaCard, modifier = Modifier.weight(1f))
                 }
             }
 
@@ -136,9 +160,7 @@ fun DashboardLiderScreen(viewModel: LiderViewModel = LiderViewModel()) {
                 colors = CardDefaults.cardColors(containerColor = Branco),
                 elevation = CardDefaults.cardElevation(3.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(18.dp)
-                ) {
+                Column(modifier = Modifier.padding(18.dp)) {
                     Text(
                         text = "Evolução do ROI",
                         style = MaterialTheme.typography.titleLarge,
