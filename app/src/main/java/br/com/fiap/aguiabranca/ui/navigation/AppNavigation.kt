@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import br.com.fiap.aguiabranca.ui.autenticacao.LoginScreen
 import br.com.fiap.aguiabranca.ui.operador.home.HomeOperadorScreen
 import br.com.fiap.aguiabranca.ui.operador.ideias.DetalhesIdeiaScreen
 import br.com.fiap.aguiabranca.ui.operador.ideias.MinhasIdeiasScreen
@@ -19,10 +20,19 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "homeOperador"
+        startDestination = "login"
     ) {
 
-        // HOME
+        // LOGIN
+
+        composable("login") {
+
+            LoginScreen(
+                navController = navController
+            )
+        }
+
+        // HOME OPERADOR
 
         composable("homeOperador") {
 
@@ -68,7 +78,7 @@ fun AppNavigation() {
             )
         }
 
-        // DETALHES DA IDEIA
+        // DETALHES IDEIA
 
         composable(
             route = "detalhesIdeia/{titulo}",
@@ -86,6 +96,16 @@ fun AppNavigation() {
                 navController = navController,
                 tituloIdeia = titulo
             )
+        }
+
+        // FUTURAS TELAS
+
+        composable("homeGestor") {
+
+        }
+
+        composable("homeLider") {
+
         }
     }
 }
