@@ -301,7 +301,7 @@ fun RelatorioIdeiasContent(
                     LegendaIdeia("Processos", "10 (25%)", Color(0xFF2E7D32))
                     LegendaIdeia("Tecnologia", "8 (20%)", Color(0xFFFFB300))
                     LegendaIdeia("Clientes", "6 (15%)", Color(0xFFD32F2F))
-                    LegendaIdeia("Outros", "4 (10%)", Color(0xFF7B1FA2))
+                    LegendaIdeia("Outros", "4 (10%)", AzulEscuro)
                 }
             }
         }

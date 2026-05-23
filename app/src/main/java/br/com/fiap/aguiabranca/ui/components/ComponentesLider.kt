@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.Dp
 import br.com.fiap.aguiabranca.ui.theme.*
 import br.com.fiap.aguiabranca.ui.lider.TelaLider
 
-val RoxoLider = Color(0xFF4A148C)
+val RoxoLider = AzulAguaBranca
 
 @Composable
 fun CardMetricaLider(
@@ -124,7 +124,7 @@ fun BottomBarLider(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
-                indicatorColor = Color(0xFFE7D7FF)
+                indicatorColor = Color(0xFFDCE8FF)
             )
         )
 
