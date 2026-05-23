@@ -10,6 +10,7 @@ import br.com.fiap.aguiabranca.ui.lider.diretrizes.DiretrizesLiderScreen
 import br.com.fiap.aguiabranca.ui.lider.relatorios.RelatoriosLiderScreen
 import br.com.fiap.aguiabranca.ui.lider.projetos.ProjetosLiderScreen
 import br.com.fiap.aguiabranca.ui.theme.AguiaBrancaTheme
+import br.com.fiap.aguiabranca.ui.lider.LiderScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
             AguiaBrancaTheme {
 
-                RelatoriosLiderScreen()
+                LiderScreen()
             }
         }
     }
