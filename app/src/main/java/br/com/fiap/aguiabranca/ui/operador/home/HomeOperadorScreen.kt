@@ -5,7 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.NotificationsNone
+import androidx.compose.material.icons.outlined.NotificationsNone
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -92,10 +92,12 @@ fun HomeOperadorScreen(
                         )
                     }
 
-                    IconButton(onClick = {}) {
+                    IconButton(
+                        onClick = {}
+                    ) {
 
                         Icon(
-                            imageVector = Icons.Default.NotificationsNone,
+                            imageVector = Icons.Outlined.NotificationsNone,
                             contentDescription = null,
                             tint = PretoTexto
                         )
@@ -183,4 +185,5 @@ fun HomeOperadorScreen(
             }
         }
     }
+
 }

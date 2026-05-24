@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "744127010185",
+    "project_id": "aguiabranca-32579",
+    "storage_bucket": "aguiabranca-32579.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744127010185:android:61734fb6d723a4dc6cfd58",
+        "android_client_info": {
+          "package_name": "br.com.fiap.aguiabranca"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAww9rbc2U3Kp1-P-bl8E9WFQK_Ge7nqIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
