@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -95,6 +97,18 @@ fun ProjetosLiderScreen(
                         contentDescription = null
                     )
                 },
+                trailingIcon = {
+                    if (pesquisa.isNotBlank()) {
+                        IconButton(
+                            onClick = { pesquisa = "" }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Clear,
+                                contentDescription = "Limpar pesquisa"
+                            )
+                        }
+                    }
+                },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -115,7 +129,13 @@ fun ProjetosLiderScreen(
                         prioridade = projeto.prioridade,
                         status = projeto.status,
                         investimento = projeto.investimento,
-                        retorno = projeto.retorno
+                        retorno = projeto.retorno,
+                        descricao = "Este projeto busca transformar uma ideia aprovada em uma melhoria prática para a operação da empresa.",
+                        statusDetalhado = when (projeto.status) {
+                            "Concluído" -> "Projeto finalizado e impacto estimado já registrado nos relatórios."
+                            "Em andamento" -> "Projeto em execução, com acompanhamento de prioridade, investimento e retorno esperado."
+                            else -> "Projeto aguardando novas atualizações do gestor responsável."
+                        }
                     )
                 }
             }

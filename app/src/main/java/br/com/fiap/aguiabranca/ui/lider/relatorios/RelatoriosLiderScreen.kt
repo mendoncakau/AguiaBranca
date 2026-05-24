@@ -22,6 +22,17 @@ import br.com.fiap.aguiabranca.ui.components.*
 import br.com.fiap.aguiabranca.ui.lider.TelaLider
 import br.com.fiap.aguiabranca.ui.theme.*
 import br.com.fiap.aguiabranca.viewmodel.LiderViewModel
+import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
+
+data class IdeiaRanking(
+    val posicao: Int,
+    val titulo: String,
+    val valor: String,
+    val categoria: String,
+    val impacto: String,
+    val economiaMensal: String
+)
 
 @Composable
 fun RelatoriosLiderScreen(
@@ -35,6 +46,9 @@ fun RelatoriosLiderScreen(
     var mesSelecionado by remember { mutableStateOf("Maio") }
     var menuMesAberto by remember { mutableStateOf(false) }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     val meses = listOf(
         "Janeiro", "Fevereiro", "Março", "Abril",
         "Maio", "Junho", "Julho", "Agosto",
@@ -42,6 +56,9 @@ fun RelatoriosLiderScreen(
     )
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         bottomBar = {
             BottomBarLider(
                 telaAtual = telaAtual,
@@ -129,6 +146,24 @@ fun RelatoriosLiderScreen(
                         }
                     }
                 }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            "✓ Relatório exportado com sucesso"
+                        )
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RoxoLider
+                )
+            ) {
+                Text("Exportar PDF")
             }
 
             Spacer(modifier = Modifier.height(18.dp))
@@ -238,21 +273,21 @@ fun RelatorioImpactoContent(
                 titulo = "Redução de custos",
                 valor = "R$ 60.000",
                 progresso = 0.85f,
-                cor = Color(0xFF0D47A1)
+                cor = AzulAguaBranca
             )
 
             BarraImpacto(
                 titulo = "Ganho de tempo",
                 valor = "R$ 45.000",
                 progresso = 0.65f,
-                cor = Color(0xFFFFB300)
+                cor = AmareloDestaque
             )
 
             BarraImpacto(
                 titulo = "Melhoria do cliente",
                 valor = "R$ 30.000",
                 progresso = 0.45f,
-                cor = Color(0xFFD32F2F)
+                cor = VermelhoStatus
             )
         }
     }
@@ -262,6 +297,35 @@ fun RelatorioImpactoContent(
 fun RelatorioIdeiasContent(
     mesSelecionado: String
 ) {
+    var ideiaSelecionada by remember { mutableStateOf<IdeiaRanking?>(null) }
+
+    val ideias = listOf(
+        IdeiaRanking(
+            posicao = 1,
+            titulo = "Redução de papel nas garagens",
+            valor = "R$ 45.000/mês",
+            categoria = "Sustentabilidade",
+            impacto = "Alto",
+            economiaMensal = "R$ 45.000"
+        ),
+        IdeiaRanking(
+            posicao = 2,
+            titulo = "Otimização no processo de manutenção",
+            valor = "R$ 12.000/mês",
+            categoria = "Processos",
+            impacto = "Médio",
+            economiaMensal = "R$ 12.000"
+        ),
+        IdeiaRanking(
+            posicao = 3,
+            titulo = "Mais sinalização nas áreas operacionais",
+            valor = "R$ 8.000/mês",
+            categoria = "Segurança",
+            impacto = "Médio",
+            economiaMensal = "R$ 8.000"
+        )
+    )
+
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
@@ -297,10 +361,10 @@ fun RelatorioIdeiasContent(
                 Spacer(modifier = Modifier.width(20.dp))
 
                 Column {
-                    LegendaIdeia("Meio ambiente", "12 (30%)", Color(0xFF0D47A1))
-                    LegendaIdeia("Processos", "10 (25%)", Color(0xFF2E7D32))
-                    LegendaIdeia("Tecnologia", "8 (20%)", Color(0xFFFFB300))
-                    LegendaIdeia("Clientes", "6 (15%)", Color(0xFFD32F2F))
+                    LegendaIdeia("Meio ambiente", "12 (30%)", AzulAguaBranca)
+                    LegendaIdeia("Processos", "10 (25%)", VerdeStatus)
+                    LegendaIdeia("Tecnologia", "8 (20%)", AmareloDestaque)
+                    LegendaIdeia("Clientes", "6 (15%)", VermelhoStatus)
                     LegendaIdeia("Outros", "4 (10%)", AzulEscuro)
                 }
             }
@@ -327,35 +391,86 @@ fun RelatorioIdeiasContent(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            ItemIdeiaAprovada(
-                posicao = 1,
-                titulo = "Redução de papel nas garagens",
-                valor = "R$ 45.000/mês"
-            )
-
-            ItemIdeiaAprovada(
-                posicao = 2,
-                titulo = "Otimização no processo de manutenção",
-                valor = "R$ 12.000/mês"
-            )
-
-            ItemIdeiaAprovada(
-                posicao = 3,
-                titulo = "Mais sinalização nas áreas operacionais",
-                valor = "R$ 8.000/mês"
-            )
+            ideias.forEach { ideia ->
+                ItemIdeiaAprovada(
+                    posicao = ideia.posicao,
+                    titulo = ideia.titulo,
+                    valor = ideia.valor,
+                    onClick = {
+                        ideiaSelecionada = ideia
+                    }
+                )
+            }
         }
+    }
+
+    if (ideiaSelecionada != null) {
+        AlertDialog(
+            onDismissRequest = {
+                ideiaSelecionada = null
+            },
+            title = {
+                Text(ideiaSelecionada!!.titulo)
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "Categoria",
+                        fontWeight = FontWeight.Bold,
+                        color = PretoTexto
+                    )
+                    Text(
+                        text = ideiaSelecionada!!.categoria,
+                        color = CinzaTexto
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Impacto",
+                        fontWeight = FontWeight.Bold,
+                        color = PretoTexto
+                    )
+                    Text(
+                        text = ideiaSelecionada!!.impacto,
+                        color = CinzaTexto
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Economia mensal",
+                        fontWeight = FontWeight.Bold,
+                        color = PretoTexto
+                    )
+                    Text(
+                        text = ideiaSelecionada!!.economiaMensal,
+                        color = VerdeAprovado,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        ideiaSelecionada = null
+                    }
+                ) {
+                    Text("Fechar")
+                }
+            }
+        )
     }
 }
 
 @Composable
 fun GraficoRoscaIdeias(modifier: Modifier = Modifier) {
     val cores = listOf(
-        Color(0xFF0D47A1),
-        Color(0xFF2E7D32),
-        Color(0xFFFFB300),
-        Color(0xFFD32F2F),
-        Color(0xFF7B1FA2)
+        AzulAguaBranca,
+        VerdeStatus,
+        AmareloDestaque,
+        VermelhoStatus,
+        AzulEscuro
     )
 
     Canvas(modifier = modifier) {
@@ -414,44 +529,54 @@ fun LegendaIdeia(
 fun ItemIdeiaAprovada(
     posicao: Int,
     titulo: String,
-    valor: String
+    valor: String,
+    onClick: () -> Unit = {}
 ) {
-    Row(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 9.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .padding(vertical = 6.dp)
+            .clickable { onClick() },
+        colors = CardDefaults.cardColors(containerColor = FundoTela),
+        elevation = CardDefaults.cardElevation(0.dp)
     ) {
-        Text(
-            text = "$posicao",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = RoxoLider,
-            modifier = Modifier.width(26.dp)
-        )
-
-        Column(
-            modifier = Modifier.weight(1f)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = titulo,
-                style = MaterialTheme.typography.bodyMedium,
+                text = "$posicao",
+                style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = PretoTexto
+                color = RoxoLider,
+                modifier = Modifier.width(26.dp)
             )
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = titulo,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = "Toque para ver detalhes",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = CinzaTexto
+                )
+            }
 
             Text(
-                text = "Ideia aprovada",
+                text = valor,
                 style = MaterialTheme.typography.bodySmall,
-                color = CinzaTexto
+                fontWeight = FontWeight.Bold,
+                color = VerdeAprovado
             )
         }
-
-        Text(
-            text = valor,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Bold,
-            color = VerdeAprovado
-        )
     }
 }

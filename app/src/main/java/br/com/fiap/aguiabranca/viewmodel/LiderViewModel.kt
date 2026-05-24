@@ -8,7 +8,9 @@ import kotlinx.coroutines.flow.update
 data class Diretriz(
     val id: Int,
     val titulo: String,
-    val descricao: String
+    val descricao: String,
+    val categoria: String,
+    val prioridade: String
 )
 
 data class Projeto(
@@ -28,18 +30,24 @@ class LiderViewModel : ViewModel() {
         listOf(
             Diretriz(
                 1,
-                "Reduzir custos operacionais em 15%",
-                "Foco em eficiência e otimização de processos."
+                "Reduzir custos operacionais",
+                "Foco em eficiência e otimização de processos.",
+                "Estratégica",
+                "Alta prioridade"
             ),
             Diretriz(
                 2,
                 "Melhorar experiência do cliente",
-                "Iniciativas voltadas para satisfação."
+                "Iniciativas voltadas para satisfação.",
+                "Estratégica",
+                "Alta prioridade"
             ),
             Diretriz(
                 3,
                 "Aumentar eficiência operacional",
-                "Buscar produtividade em áreas internas."
+                "Buscar produtividade em áreas internas.",
+                "Estratégica",
+                "Alta prioridade"
             )
         )
     )
@@ -48,32 +56,38 @@ class LiderViewModel : ViewModel() {
 
     fun adicionarDiretriz(
         titulo: String,
-        descricao: String
+        descricao: String,
+        categoria: String,
+        prioridade: String
     ) {
         ultimoId++
 
-        _diretrizes.update {
-            it + Diretriz(
-                ultimoId,
-                titulo,
-                descricao
-            )
-        }
+        _diretrizes.value = _diretrizes.value + Diretriz(
+            id = ultimoId,
+            titulo = titulo,
+            descricao = descricao,
+            categoria = categoria,
+            prioridade = prioridade
+        )
     }
 
     fun editarDiretriz(
         id: Int,
         titulo: String,
-        descricao: String
+        descricao: String,
+        categoria: String,
+        prioridade: String
     ) {
-        _diretrizes.update { lista ->
-            lista.map {
-                if (it.id == id) {
-                    it.copy(
-                        titulo = titulo,
-                        descricao = descricao
-                    )
-                } else it
+        _diretrizes.value = _diretrizes.value.map {
+            if (it.id == id) {
+                it.copy(
+                    titulo = titulo,
+                    descricao = descricao,
+                    categoria = categoria,
+                    prioridade = prioridade
+                )
+            } else {
+                it
             }
         }
     }

@@ -8,17 +8,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.fiap.aguiabranca.ui.components.BottomBarLider
-import br.com.fiap.aguiabranca.ui.components.CardDiretriz
-import br.com.fiap.aguiabranca.ui.components.RoxoLider
-import br.com.fiap.aguiabranca.ui.components.TopoTelaLider
+import br.com.fiap.aguiabranca.ui.components.*
 import br.com.fiap.aguiabranca.ui.lider.TelaLider
 import br.com.fiap.aguiabranca.ui.theme.FundoTela
 import br.com.fiap.aguiabranca.ui.theme.PretoTexto
 import br.com.fiap.aguiabranca.viewmodel.LiderViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun DiretrizesLiderScreen(
@@ -28,23 +28,33 @@ fun DiretrizesLiderScreen(
 ) {
     val diretrizes by viewModel.diretrizes.collectAsState()
 
-    var abrirDialog by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
-    var editandoId by remember { mutableStateOf<Int?>(null) }
+    var mostrarDialogNova by remember { mutableStateOf(false) }
+    var mostrarDialogEditar by remember { mutableStateOf(false) }
 
     var titulo by remember { mutableStateOf("") }
-
     var descricao by remember { mutableStateOf("") }
 
+    var diretrizEditandoId by remember { mutableStateOf<Int?>(null) }
     var diretrizParaExcluir by remember { mutableStateOf<Int?>(null) }
 
+    var categoria by remember { mutableStateOf("Estratégica") }
+    var prioridade by remember { mutableStateOf("Alta prioridade") }
+
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+
         bottomBar = {
             BottomBarLider(
                 telaAtual = telaAtual,
                 onTelaSelecionada = onTelaSelecionada
             )
         },
+
         containerColor = FundoTela
     ) { paddingValues ->
 
@@ -64,10 +74,9 @@ fun DiretrizesLiderScreen(
 
             Button(
                 onClick = {
-                    editandoId = null
                     titulo = ""
                     descricao = ""
-                    abrirDialog = true
+                    mostrarDialogNova = true
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RoxoLider
@@ -82,7 +91,7 @@ fun DiretrizesLiderScreen(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 Text(
-                    "Nova diretriz",
+                    text = "Nova diretriz",
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -103,14 +112,16 @@ fun DiretrizesLiderScreen(
                 CardDiretriz(
                     titulo = diretriz.titulo,
                     descricao = diretriz.descricao,
-
+                    categoria = diretriz.categoria,
+                    prioridade = diretriz.prioridade,
                     onEditar = {
-                        editandoId = diretriz.id
+                        diretrizEditandoId = diretriz.id
                         titulo = diretriz.titulo
                         descricao = diretriz.descricao
-                        abrirDialog = true
+                        categoria = diretriz.categoria
+                        prioridade = diretriz.prioridade
+                        mostrarDialogEditar = true
                     },
-
                     onExcluir = {
                         diretrizParaExcluir = diretriz.id
                     }
@@ -119,138 +130,204 @@ fun DiretrizesLiderScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
         }
+    }
 
-        if (abrirDialog) {
+    if (mostrarDialogNova) {
 
-            AlertDialog(
+        AlertDialog(
+            onDismissRequest = {
+                mostrarDialogNova = false
+            },
 
-                onDismissRequest = {
-                    abrirDialog = false
-                },
+            confirmButton = {
+                TextButton(
+                    onClick = {
 
-                confirmButton = {
-
-                    Button(
-                        onClick = {
-
-                            if (editandoId == null) {
-
-                                viewModel.adicionarDiretriz(
-                                    titulo,
-                                    descricao
-                                )
-
-                            } else {
-
-                                viewModel.editarDiretriz(
-                                    editandoId!!,
-                                    titulo,
-                                    descricao
-                                )
-                            }
-
-                            abrirDialog = false
-                        }
-                    ) {
-                        Text("Salvar")
-                    }
-                },
-
-                dismissButton = {
-
-                    TextButton(
-                        onClick = {
-                            abrirDialog = false
-                        }
-                    ) {
-                        Text("Cancelar")
-                    }
-                },
-
-                title = {
-                    Text(
-                        if (editandoId == null)
-                            "Nova diretriz"
-                        else
-                            "Editar diretriz"
-                    )
-                },
-
-                text = {
-
-                    Column {
-
-                        OutlinedTextField(
-                            value = titulo,
-                            onValueChange = {
-                                titulo = it
-                            },
-                            label = {
-                                Text("Título")
-                            },
-                            modifier = Modifier.fillMaxWidth()
+                        viewModel.adicionarDiretriz(
+                            titulo,
+                            descricao,
+                            categoria,
+                            prioridade
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        mostrarDialogNova = false
 
-                        OutlinedTextField(
-                            value = descricao,
-                            onValueChange = {
-                                descricao = it
-                            },
-                            label = {
-                                Text("Descrição")
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-            )
-        }
-        if (diretrizParaExcluir != null) {
-
-            AlertDialog(
-                onDismissRequest = {
-                    diretrizParaExcluir = null
-                },
-
-                title = {
-                    Text("Excluir diretriz")
-                },
-
-                text = {
-                    Text(
-                        "Tem certeza que deseja remover esta diretriz?"
-                    )
-                },
-
-                confirmButton = {
-                    Button(
-                        onClick = {
-                            viewModel.excluirDiretriz(
-                                diretrizParaExcluir!!
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "✓ Diretriz criada com sucesso"
                             )
-
-                            diretrizParaExcluir = null
-                        },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Text("Excluir")
-                    }
-                },
-
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            diretrizParaExcluir = null
                         }
-                    ) {
-                        Text("Cancelar")
                     }
+                ) {
+                    Text("Salvar")
                 }
-            )
-        }
+            },
+
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        mostrarDialogNova = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            },
+
+            title = {
+                Text("Nova diretriz")
+            },
+
+            text = {
+                Column {
+
+                    OutlinedTextField(
+                        value = titulo,
+                        onValueChange = {
+                            titulo = it
+                        },
+                        label = {
+                            Text("Título")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = descricao,
+                        onValueChange = {
+                            descricao = it
+                        },
+                        label = {
+                            Text("Descrição")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        )
+    }
+
+    if (mostrarDialogEditar) {
+
+        AlertDialog(
+            onDismissRequest = {
+                mostrarDialogEditar = false
+            },
+
+            confirmButton = {
+                TextButton(
+                    onClick = {
+
+                        diretrizEditandoId?.let {
+
+                            viewModel.editarDiretriz(
+                                diretrizEditandoId!!,
+                                titulo,
+                                descricao,
+                                categoria,
+                                prioridade
+                            )
+                        }
+
+                        mostrarDialogEditar = false
+
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "✓ Diretriz atualizada com sucesso"
+                            )
+                        }
+                    }
+                ) {
+                    Text("Salvar")
+                }
+            },
+
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        mostrarDialogEditar = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            },
+
+            title = {
+                Text("Editar diretriz")
+            },
+
+            text = {
+                Column {
+
+                    OutlinedTextField(
+                        value = titulo,
+                        onValueChange = {
+                            titulo = it
+                        },
+                        label = {
+                            Text("Título")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(12.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = descricao,
+                        onValueChange = {
+                            descricao = it
+                        },
+                        label = {
+                            Text("Descrição")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+        )
+    }
+    if (diretrizParaExcluir != null) {
+        AlertDialog(
+            onDismissRequest = {
+                diretrizParaExcluir = null
+            },
+            title = {
+                Text("Excluir diretriz")
+            },
+            text = {
+                Text("Tem certeza que deseja remover esta diretriz?")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.excluirDiretriz(diretrizParaExcluir!!)
+
+                        diretrizParaExcluir = null
+
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                "✓ Diretriz removida com sucesso"
+                            )
+                        }
+                    }
+                ) {
+                    Text("Excluir")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        diretrizParaExcluir = null
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
     }
 }

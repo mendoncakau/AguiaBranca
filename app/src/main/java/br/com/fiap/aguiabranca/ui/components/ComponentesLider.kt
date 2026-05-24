@@ -22,6 +22,10 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.unit.Dp
 import br.com.fiap.aguiabranca.ui.theme.*
 import br.com.fiap.aguiabranca.ui.lider.TelaLider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
 val RoxoLider = AzulAguaBranca
 
@@ -193,9 +197,22 @@ fun LinhaGraficoMock(valor: Float, mes: String) {
 fun CardDiretriz(
     titulo: String,
     descricao: String,
+    categoria: String,
+    prioridade: String,
     onEditar: () -> Unit = {},
     onExcluir: () -> Unit = {}
 ) {
+    val corCategoria = when (categoria) {
+        "Sustentabilidade" -> VerdeStatus
+        "Clientes" -> LaranjaStatus
+        else -> AzulAguaBranca
+    }
+
+    val corPrioridade = when (prioridade) {
+        "Alta prioridade" -> VermelhoStatus
+        "Média prioridade" -> LaranjaStatus
+        else -> VerdeStatus
+    }
 
     Card(
         modifier = Modifier
@@ -205,52 +222,70 @@ fun CardDiretriz(
         colors = CardDefaults.cardColors(containerColor = Branco),
         elevation = CardDefaults.cardElevation(3.dp)
     ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-
-            Column(
-                modifier = Modifier.weight(1f)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
             ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = titulo,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = PretoTexto
+                    )
 
-                Text(
-                    text = titulo,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = PretoTexto
-                )
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = descricao,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = CinzaTexto
+                    )
+                }
 
-                Text(
-                    text = descricao,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = CinzaTexto
-                )
+                Row {
+                    IconButton(onClick = onEditar) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar",
+                            tint = AzulAguaBranca
+                        )
+                    }
+
+                    IconButton(onClick = onExcluir) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Excluir",
+                            tint = VermelhoStatus
+                        )
+                    }
+                }
             }
 
-            Row {
+            Spacer(modifier = Modifier.height(12.dp))
 
-                IconButton(onClick = onEditar) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Editar",
-                        tint = RoxoLider
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AssistChip(
+                    onClick = {},
+                    label = { Text(categoria) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        labelColor = corCategoria
                     )
-                }
+                )
 
-                IconButton(onClick = onExcluir) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Excluir",
-                        tint = Color.Red
+                AssistChip(
+                    onClick = {},
+                    label = { Text(prioridade) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        labelColor = corPrioridade
                     )
-                }
+                )
             }
         }
     }
@@ -263,12 +298,18 @@ fun CardProjetoLider(
     prioridade: String,
     status: String,
     investimento: Double,
-    retorno: Double
+    retorno: Double,
+    descricao: String = "Projeto criado a partir de uma ideia aprovada, com foco em gerar impacto operacional e financeiro.",
+    statusDetalhado: String = "Projeto em acompanhamento pelo gestor responsável."
 ) {
+    var expandido by remember {
+        mutableStateOf(false)
+    }
+
     val corPrioridade = when (prioridade) {
-        "Alta" -> Color(0xFFD32F2F)
-        "Média" -> Color(0xFFFF9800)
-        else -> VerdeAprovado
+        "Alta" -> VermelhoStatus
+        "Média" -> LaranjaStatus
+        else -> VerdeStatus
     }
 
     Card(
@@ -277,7 +318,10 @@ fun CardProjetoLider(
             .padding(vertical = 6.dp),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = Branco),
-        elevation = CardDefaults.cardElevation(3.dp)
+        elevation = CardDefaults.cardElevation(3.dp),
+        onClick = {
+            expandido = !expandido
+        }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -314,17 +358,86 @@ fun CardProjetoLider(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Status: $status", color = CinzaTexto)
-                Text("ROI: R$ %.0f".format(retorno - investimento), color = VerdeAprovado)
+                Text(
+                    text = "Status: $status",
+                    color = CinzaTexto,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = if (expandido) "Ocultar" else "Ver detalhes",
+                    color = RoxoLider,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            if (expandido) {
+                Spacer(modifier = Modifier.height(14.dp))
 
-            Text(
-                text = "Investimento: R$ %.0f  •  Retorno: R$ %.0f".format(investimento, retorno),
-                style = MaterialTheme.typography.bodySmall,
-                color = CinzaTexto
-            )
+                Divider()
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Text(
+                    text = "Descrição",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = descricao,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Investimento",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = "R$ %.0f".format(investimento),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Retorno esperado",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = "R$ %.0f".format(retorno),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = VerdeStatus,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Status detalhado",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = statusDetalhado,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+            }
         }
     }
 }
