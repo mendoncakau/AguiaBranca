@@ -1,168 +1,189 @@
 package br.com.fiap.aguiabranca.ui.operador.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.outlined.NotificationsNone
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import br.com.fiap.aguiabranca.ui.componentes.BarraNavegacaoOperador
-import br.com.fiap.aguiabranca.ui.componentes.CardEstatistica
-import br.com.fiap.aguiabranca.ui.componentes.CardHeroIdeia
-import br.com.fiap.aguiabranca.ui.theme.AzulPrincipal
-import br.com.fiap.aguiabranca.ui.theme.FundoTela
-import br.com.fiap.aguiabranca.viewmodel.HomeOperadorViewModel
-
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import br.com.fiap.aguiabranca.ui.operador.home.components.BottomBarOperador
+import br.com.fiap.aguiabranca.ui.operador.home.components.CardNovaIdeia
+import br.com.fiap.aguiabranca.ui.operador.home.components.DiretrizCard
+import br.com.fiap.aguiabranca.ui.operador.home.components.ItemResumo
+import br.com.fiap.aguiabranca.ui.theme.*
 
 @Composable
 fun HomeOperadorScreen(
-    homeOperadorViewModel: HomeOperadorViewModel = viewModel()
+    navController: NavHostController,
+    onNovaIdeiaClick: () -> Unit = {}
 ) {
-
-    val nomeUsuario by homeOperadorViewModel.nomeUsuario.collectAsState()
-
-    val quantidadeIdeias by homeOperadorViewModel.quantidadeIdeias.collectAsState()
-
-    val quantidadeEmAnalise by homeOperadorViewModel.quantidadeEmAnalise.collectAsState()
-
-    val quantidadeAprovadas by homeOperadorViewModel.quantidadeAprovadas.collectAsState()
-
-    val quantidadeViraramProjeto by homeOperadorViewModel.quantidadeViraramProjeto.collectAsState()
 
     Scaffold(
 
-        containerColor = FundoTela,
-
-        bottomBar = {
-
-            BarraNavegacaoOperador()
-        },
+        containerColor = Fundo,
 
         floatingActionButton = {
 
             FloatingActionButton(
-                onClick = { },
+                onClick = onNovaIdeiaClick,
+                shape = CircleShape,
                 containerColor = AzulPrincipal
             ) {
 
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    tint = Color.White
+                    tint = Branco
                 )
             }
+        },
+
+        bottomBar = {
+
+            BottomBarOperador(
+                navController = navController
+            )
         }
 
-    ) { paddingValues ->
+    ) { padding ->
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(FundoTela)
-                .padding(paddingValues)
-                .padding(horizontal = 20.dp),
-
-            verticalArrangement = Arrangement.spacedBy(24.dp),
-
-            contentPadding = PaddingValues(bottom = 120.dp)
+                .padding(padding)
+                .padding(horizontal = 20.dp)
         ) {
 
             item {
 
-                Spacer(modifier = Modifier.height(10.dp))
-            }
+                Spacer(modifier = Modifier.height(20.dp))
 
-            item {
+                // HEADER
 
-                Text(
-                    text = "Olá, $nomeUsuario 👋",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-            }
-
-            item {
-
-                Text(
-                    text = "Vamos transformar ideias em resultados.",
-                    color = Color.Gray
-                )
-            }
-
-            item {
-
-                CardHeroIdeia()
-            }
-
-            item {
-
-                Text(
-                    text = "Resumo",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-
-            item {
-
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    item {
+                    Column {
 
-                        CardEstatistica(
-                            titulo = "Minhas ideias",
-                            valor = quantidadeIdeias,
-                            cor = AzulPrincipal
+                        Text(
+                            text = "Olá, João! 👋",
+                            fontSize = 30.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = PretoTexto
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = "Que bom te ver por aqui.",
+                            fontSize = 16.sp,
+                            color = CinzaTexto
                         )
                     }
 
-                    item {
+                    IconButton(
+                        onClick = {}
+                    ) {
 
-                        CardEstatistica(
-                            titulo = "Em análise",
-                            valor = quantidadeEmAnalise,
-                            cor = Color(0xFFF59E0B)
-                        )
-                    }
-
-                    item {
-
-                        CardEstatistica(
-                            titulo = "Aprovadas",
-                            valor = quantidadeAprovadas,
-                            cor = Color(0xFF16A34A)
-                        )
-                    }
-
-                    item {
-
-                        CardEstatistica(
-                            titulo = "Projetos",
-                            valor = quantidadeViraramProjeto,
-                            cor = Color(0xFF7C3AED)
+                        Icon(
+                            imageVector = Icons.Outlined.NotificationsNone,
+                            contentDescription = null,
+                            tint = PretoTexto
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // CARD PRINCIPAL
+
+                CardNovaIdeia(
+                    onNovaIdeiaClick = onNovaIdeiaClick
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // DIRETRIZES
+
+                Text(
+                    text = "Diretrizes estratégicas",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                DiretrizCard(
+                    titulo = "Reduzir custos operacionais",
+                    descricao = "Ideias para otimizar recursos e reduzir desperdícios."
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                DiretrizCard(
+                    titulo = "Melhorar experiência do cliente",
+                    descricao = "Sugestões para aumentar satisfação e qualidade."
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                DiretrizCard(
+                    titulo = "Aumentar eficiência logística",
+                    descricao = "Melhorias em processos, rotas e produtividade."
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                // RESUMO
+
+                Text(
+                    text = "Resumo",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Spacer(modifier = Modifier.height(18.dp))
+
+                ItemResumo(
+                    titulo = "Minhas ideias",
+                    valor = "7",
+                    cor = AzulPrincipal
+                )
+
+                ItemResumo(
+                    titulo = "Em análise",
+                    valor = "2",
+                    cor = LaranjaAnalise
+                )
+
+                ItemResumo(
+                    titulo = "Aprovadas",
+                    valor = "3",
+                    cor = VerdeAprovado
+                )
+
+                ItemResumo(
+                    titulo = "Implementadas",
+                    valor = "2",
+                    cor = RoxoProjeto
+                )
+
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
     }
+
 }

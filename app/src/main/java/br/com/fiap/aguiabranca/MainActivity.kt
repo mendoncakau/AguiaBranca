@@ -10,7 +10,9 @@ import br.com.fiap.aguiabranca.ui.lider.diretrizes.DiretrizesLiderScreen
 import br.com.fiap.aguiabranca.ui.lider.relatorios.RelatoriosLiderScreen
 import br.com.fiap.aguiabranca.ui.lider.projetos.ProjetosLiderScreen
 import br.com.fiap.aguiabranca.ui.theme.AguiaBrancaTheme
-import br.com.fiap.aguiabranca.ui.gestor.GestorScreen
+import br.com.fiap.aguiabranca.ui.navigation.AppNavigation
+
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +25,7 @@ class MainActivity : ComponentActivity() {
 
             AguiaBrancaTheme {
 
-                GestorScreen()
+                AppNavigation()
             }
         }
     }

@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,8 +21,13 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.ui.unit.Dp
 import br.com.fiap.aguiabranca.ui.theme.*
+import br.com.fiap.aguiabranca.ui.lider.TelaLider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 
-val RoxoLider = Color(0xFF4A148C)
+val RoxoLider = AzulAguaBranca
 
 @Composable
 fun CardMetricaLider(
@@ -69,9 +73,10 @@ fun CardMetricaLider(
 @Composable
 fun TopoTelaLider(
     titulo: String,
-    mostrarFiltro: Boolean = true
+    mostrarFiltro: Boolean = true,
+    textoFiltro: String = "Este mês",
+    onFiltroClick: () -> Unit = {}
 ) {
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -79,7 +84,6 @@ fun TopoTelaLider(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Text(
             text = titulo,
             style = MaterialTheme.typography.titleLarge,
@@ -88,14 +92,13 @@ fun TopoTelaLider(
         )
 
         if (mostrarFiltro) {
-
             Surface(
+                onClick = onFiltroClick,
                 shape = RoundedCornerShape(24.dp),
                 color = Color(0xFFEFF1F5)
             ) {
-
                 Text(
-                    text = "Este mês",
+                    text = textoFiltro,
                     modifier = Modifier.padding(
                         horizontal = 16.dp,
                         vertical = 10.dp
@@ -109,16 +112,31 @@ fun TopoTelaLider(
 }
 
 @Composable
-fun BottomBarLider() {
+fun BottomBarLider(
+    telaAtual: TelaLider,
+    onTelaSelecionada: (TelaLider) -> Unit
+) {
     NavigationBar(
         containerColor = Branco,
         tonalElevation = 8.dp
     ) {
         NavigationBarItem(
-            selected = true,
-            onClick = {},
+            selected = telaAtual == TelaLider.DASHBOARD,
+            onClick = { onTelaSelecionada(TelaLider.DASHBOARD) },
             icon = { Icon(Icons.Default.Home, contentDescription = null) },
             label = { Text("Dashboard", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFDCE8FF)
+            )
+        )
+
+        NavigationBarItem(
+            selected = telaAtual == TelaLider.DIRETRIZES,
+            onClick = { onTelaSelecionada(TelaLider.DIRETRIZES) },
+            icon = { Icon(Icons.Default.Flag, contentDescription = null) },
+            label = { Text("Estratégia", maxLines = 1) },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
@@ -127,31 +145,27 @@ fun BottomBarLider() {
         )
 
         NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.Flag, contentDescription = null) },
-            label = { Text("Estratégia", maxLines = 1) }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
+            selected = telaAtual == TelaLider.PROJETOS,
+            onClick = { onTelaSelecionada(TelaLider.PROJETOS) },
             icon = { Icon(Icons.Default.Folder, contentDescription = null) },
-            label = { Text("Projetos", maxLines = 1) }
+            label = { Text("Projetos", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFE7D7FF)
+            )
         )
 
         NavigationBarItem(
-            selected = false,
-            onClick = {},
+            selected = telaAtual == TelaLider.RELATORIOS,
+            onClick = { onTelaSelecionada(TelaLider.RELATORIOS) },
             icon = { Icon(Icons.Default.BarChart, contentDescription = null) },
-            label = { Text("Relatórios", maxLines = 1) }
-        )
-
-        NavigationBarItem(
-            selected = false,
-            onClick = {},
-            icon = { Icon(Icons.Default.MoreHoriz, contentDescription = null) },
-            label = { Text("Mais", maxLines = 1) }
+            label = { Text("Relatórios", maxLines = 1) },
+            colors = NavigationBarItemDefaults.colors(
+                selectedIconColor = RoxoLider,
+                selectedTextColor = RoxoLider,
+                indicatorColor = Color(0xFFE7D7FF)
+            )
         )
     }
 }
@@ -183,9 +197,22 @@ fun LinhaGraficoMock(valor: Float, mes: String) {
 fun CardDiretriz(
     titulo: String,
     descricao: String,
+    categoria: String,
+    prioridade: String,
     onEditar: () -> Unit = {},
     onExcluir: () -> Unit = {}
 ) {
+    val corCategoria = when (categoria) {
+        "Sustentabilidade" -> VerdeStatus
+        "Clientes" -> LaranjaStatus
+        else -> AzulAguaBranca
+    }
+
+    val corPrioridade = when (prioridade) {
+        "Alta prioridade" -> VermelhoStatus
+        "Média prioridade" -> LaranjaStatus
+        else -> VerdeStatus
+    }
 
     Card(
         modifier = Modifier
@@ -195,52 +222,70 @@ fun CardDiretriz(
         colors = CardDefaults.cardColors(containerColor = Branco),
         elevation = CardDefaults.cardElevation(3.dp)
     ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
-
-            Column(
-                modifier = Modifier.weight(1f)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
             ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = titulo,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = PretoTexto
+                    )
 
-                Text(
-                    text = titulo,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = PretoTexto
-                )
+                    Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = descricao,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = CinzaTexto
+                    )
+                }
 
-                Text(
-                    text = descricao,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = CinzaTexto
-                )
+                Row {
+                    IconButton(onClick = onEditar) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = "Editar",
+                            tint = AzulAguaBranca
+                        )
+                    }
+
+                    IconButton(onClick = onExcluir) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Excluir",
+                            tint = VermelhoStatus
+                        )
+                    }
+                }
             }
 
-            Row {
+            Spacer(modifier = Modifier.height(12.dp))
 
-                IconButton(onClick = onEditar) {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Editar",
-                        tint = RoxoLider
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AssistChip(
+                    onClick = {},
+                    label = { Text(categoria) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        labelColor = corCategoria
                     )
-                }
+                )
 
-                IconButton(onClick = onExcluir) {
-                    Icon(
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "Excluir",
-                        tint = Color.Red
+                AssistChip(
+                    onClick = {},
+                    label = { Text(prioridade) },
+                    colors = AssistChipDefaults.assistChipColors(
+                        labelColor = corPrioridade
                     )
-                }
+                )
             }
         }
     }
@@ -253,12 +298,18 @@ fun CardProjetoLider(
     prioridade: String,
     status: String,
     investimento: Double,
-    retorno: Double
+    retorno: Double,
+    descricao: String = "Projeto criado a partir de uma ideia aprovada, com foco em gerar impacto operacional e financeiro.",
+    statusDetalhado: String = "Projeto em acompanhamento pelo gestor responsável."
 ) {
+    var expandido by remember {
+        mutableStateOf(false)
+    }
+
     val corPrioridade = when (prioridade) {
-        "Alta" -> Color(0xFFD32F2F)
-        "Média" -> Color(0xFFFF9800)
-        else -> VerdeAprovado
+        "Alta" -> VermelhoStatus
+        "Média" -> LaranjaStatus
+        else -> VerdeStatus
     }
 
     Card(
@@ -267,7 +318,10 @@ fun CardProjetoLider(
             .padding(vertical = 6.dp),
         shape = RoundedCornerShape(18.dp),
         colors = CardDefaults.cardColors(containerColor = Branco),
-        elevation = CardDefaults.cardElevation(3.dp)
+        elevation = CardDefaults.cardElevation(3.dp),
+        onClick = {
+            expandido = !expandido
+        }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -304,17 +358,86 @@ fun CardProjetoLider(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Status: $status", color = CinzaTexto)
-                Text("ROI: R$ %.0f".format(retorno - investimento), color = VerdeAprovado)
+                Text(
+                    text = "Status: $status",
+                    color = CinzaTexto,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = if (expandido) "Ocultar" else "Ver detalhes",
+                    color = RoxoLider,
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            if (expandido) {
+                Spacer(modifier = Modifier.height(14.dp))
 
-            Text(
-                text = "Investimento: R$ %.0f  •  Retorno: R$ %.0f".format(investimento, retorno),
-                style = MaterialTheme.typography.bodySmall,
-                color = CinzaTexto
-            )
+                Divider()
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                Text(
+                    text = "Descrição",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = descricao,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Investimento",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = "R$ %.0f".format(investimento),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Retorno esperado",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = "R$ %.0f".format(retorno),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = VerdeStatus,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Status detalhado",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = PretoTexto
+                )
+
+                Text(
+                    text = statusDetalhado,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CinzaTexto
+                )
+            }
         }
     }
 }
