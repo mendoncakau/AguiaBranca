@@ -77,7 +77,6 @@ fun PerfilLiderScreen(
             .verticalScroll(rememberScrollState())
     ) {
 
-        // HEADER
 
         Box(
             modifier = Modifier
@@ -188,8 +187,6 @@ fun PerfilLiderScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // CARD INFORMAÇÕES
-
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -280,8 +277,6 @@ fun PerfilLiderScreen(
         }
 
         Spacer(modifier = Modifier.height(34.dp))
-
-        // CARD RESUMO
 
         Card(
             modifier = Modifier

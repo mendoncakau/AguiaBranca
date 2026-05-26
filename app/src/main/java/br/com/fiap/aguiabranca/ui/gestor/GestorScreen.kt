@@ -46,10 +46,6 @@ fun GestorScreen(
         mutableStateOf(TelaGestor.DASHBOARD)
     }
 
-    // =========================
-    // IDEIAS
-    // =========================
-
     var telaIdeias by remember {
         mutableStateOf("lista")
     }
@@ -61,10 +57,6 @@ fun GestorScreen(
     var statusIdeiaSelecionada by remember {
         mutableStateOf("Em análise")
     }
-
-    // =========================
-    // PROJETOS
-    // =========================
 
     var telaProjeto by remember {
         mutableStateOf("lista")
@@ -121,8 +113,6 @@ fun GestorScreen(
 
             NavigationBar {
 
-                // DASHBOARD
-
                 NavigationBarItem(
 
                     selected =
@@ -145,8 +135,6 @@ fun GestorScreen(
                         Text("Dashboard")
                     }
                 )
-
-                // IDEIAS
 
                 NavigationBarItem(
 
@@ -174,8 +162,6 @@ fun GestorScreen(
                     }
                 )
 
-                // PROJETOS
-
                 NavigationBarItem(
 
                     selected =
@@ -202,8 +188,6 @@ fun GestorScreen(
                         Text("Projetos")
                     }
                 )
-
-                // PERFIL
 
                 NavigationBarItem(
 
@@ -234,22 +218,14 @@ fun GestorScreen(
 
         when (telaAtual) {
 
-            // =====================================================
-            // DASHBOARD
-            // =====================================================
-
             TelaGestor.DASHBOARD -> {
 
                 DashboardGestorScreen(
-                    modifier = Modifier.padding(
+                     modifier = Modifier.padding(
                         paddingValues
                     )
                 )
             }
-
-            // =====================================================
-            // IDEIAS
-            // =====================================================
 
             TelaGestor.IDEIAS -> {
 
@@ -327,10 +303,6 @@ fun GestorScreen(
                     }
                 }
             }
-
-            // =====================================================
-            // PROJETOS
-            // =====================================================
 
             TelaGestor.PROJETOS -> {
 
@@ -520,10 +492,6 @@ fun GestorScreen(
                     }
                 }
             }
-
-            // =====================================================
-            // PERFIL
-            // =====================================================
 
             TelaGestor.PERFIL -> {
 

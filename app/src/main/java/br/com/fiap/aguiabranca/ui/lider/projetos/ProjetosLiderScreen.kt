@@ -59,7 +59,6 @@ fun ProjetosLiderScreen(
             .background(FundoTela)
     ) {
 
-        // HEADER AZUL
 
         Box(
             modifier = Modifier
@@ -97,8 +96,6 @@ fun ProjetosLiderScreen(
                 )
 
                 Spacer(modifier = Modifier.height(22.dp))
-
-                // CAMPO PESQUISA
 
                 OutlinedTextField(
                     value = pesquisa,
@@ -160,7 +157,6 @@ fun ProjetosLiderScreen(
 
                 Spacer(modifier = Modifier.height(22.dp))
 
-                // RESUMO
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -194,7 +190,6 @@ fun ProjetosLiderScreen(
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        // LISTAGEM
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),

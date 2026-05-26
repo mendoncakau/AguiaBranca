@@ -66,7 +66,6 @@ fun HomeOperadorScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // HEADER
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -106,15 +105,12 @@ fun HomeOperadorScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // CARD PRINCIPAL
 
                 CardNovaIdeia(
                     onNovaIdeiaClick = onNovaIdeiaClick
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // DIRETRIZES
 
                 Text(
                     text = "Diretrizes estratégicas",
@@ -145,8 +141,6 @@ fun HomeOperadorScreen(
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
-
-                // RESUMO
 
                 Text(
                     text = "Resumo",

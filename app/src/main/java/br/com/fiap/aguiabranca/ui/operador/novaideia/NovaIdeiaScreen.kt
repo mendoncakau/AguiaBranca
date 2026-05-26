@@ -33,7 +33,6 @@ fun NovaIdeiaScreen(
         mutableStateOf("Médio")
     }
 
-    // CATEGORIAS
 
     val categorias = listOf(
         "Redução de custos",
@@ -52,7 +51,6 @@ fun NovaIdeiaScreen(
         mutableStateOf(false)
     }
 
-    // DIRETRIZES
 
     val diretrizes = listOf(
         "Reduzir custos operacionais",
@@ -110,7 +108,6 @@ fun NovaIdeiaScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // TÍTULO
 
             Text(
                 text = "Título da ideia",
@@ -134,8 +131,6 @@ fun NovaIdeiaScreen(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            // DESCRIÇÃO
 
             Text(
                 text = "Descrição da ideia",
@@ -169,8 +164,6 @@ fun NovaIdeiaScreen(
             )
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            // CATEGORIA
 
             Text(
                 text = "Categoria",
@@ -230,7 +223,6 @@ fun NovaIdeiaScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // TIPO DE IMPACTO
 
             Text(
                 text = "Tipo de impacto",
@@ -275,7 +267,6 @@ fun NovaIdeiaScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // IMPACTO ESPERADO
 
             Text(
                 text = "Impacto esperado",
@@ -322,8 +313,6 @@ fun NovaIdeiaScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ESTIMATIVA
-
             Text(
                 text = "Estimativa de ganho (R$ ou %)",
                 fontWeight = FontWeight.Bold,
@@ -345,8 +334,6 @@ fun NovaIdeiaScreen(
             )
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            // DIRETRIZ
 
             Text(
                 text = "Diretriz estratégica relacionada",
@@ -405,8 +392,6 @@ fun NovaIdeiaScreen(
             }
 
             Spacer(modifier = Modifier.height(36.dp))
-
-            // BOTÃO
 
             Button(
                 onClick = {

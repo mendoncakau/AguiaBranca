@@ -52,7 +52,6 @@ fun PerfilOperadorScreen(
         mutableStateOf("Carregando...")
     }
 
-    // BUSCAR NOME NO FIRESTORE
 
     LaunchedEffect(Unit) {
 
@@ -74,8 +73,6 @@ fun PerfilOperadorScreen(
                 }
         }
     }
-
-    // INICIAIS AUTOMÁTICAS
 
     val iniciais = remember(nomeUsuario) {
 
@@ -136,8 +133,6 @@ fun PerfilOperadorScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-            // HEADER
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -151,8 +146,6 @@ fun PerfilOperadorScreen(
                         )
                     )
             ) {
-
-                // BOTÃO SAIR
 
                 IconButton(
 
@@ -190,8 +183,6 @@ fun PerfilOperadorScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
-                        // FOTO / INICIAIS
-
                         Box(
                             modifier = Modifier
                                 .size(100.dp)
@@ -212,8 +203,6 @@ fun PerfilOperadorScreen(
                         Spacer(modifier = Modifier.width(18.dp))
 
                         Column {
-
-                            // NOME DINÂMICO
 
                             Text(
                                 text = nomeUsuario,
@@ -255,8 +244,6 @@ fun PerfilOperadorScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            // CARD FUNCIONÁRIO
 
             Card(
                 modifier = Modifier
@@ -333,8 +320,6 @@ fun PerfilOperadorScreen(
 
             Spacer(modifier = Modifier.height(34.dp))
 
-            // TÍTULO SELOS
-
             Text(
                 text = "Meus selos",
 
@@ -346,8 +331,6 @@ fun PerfilOperadorScreen(
             )
 
             Spacer(modifier = Modifier.height(18.dp))
-
-            // GRID SELOS
 
             LazyVerticalGrid(
 

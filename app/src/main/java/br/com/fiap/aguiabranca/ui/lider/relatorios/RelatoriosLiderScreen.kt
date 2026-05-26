@@ -326,7 +326,6 @@ fun RelatorioImpactoContent(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // CARDS PRINCIPAIS
 
         Column(
             verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -355,8 +354,6 @@ fun RelatorioImpactoContent(
         }
 
         Spacer(modifier = Modifier.height(28.dp))
-
-        // RESUMO EXTRA
 
         Card(
             modifier = Modifier.fillMaxWidth(),

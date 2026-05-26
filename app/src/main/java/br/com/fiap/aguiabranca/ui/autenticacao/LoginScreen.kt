@@ -65,7 +65,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(70.dp))
 
-            // LOGO
 
             Image(
                 painter = painterResource(
@@ -95,8 +94,6 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(42.dp))
-
-            // EMAIL
 
             OutlinedTextField(
                 value = email,
@@ -136,8 +133,6 @@ fun LoginScreen(
             )
 
             Spacer(modifier = Modifier.height(22.dp))
-
-            // SENHA
 
             OutlinedTextField(
                 value = senha,
@@ -181,7 +176,6 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // ESQUECI SENHA
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -235,8 +229,6 @@ fun LoginScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-
-            // BOTÃO LOGIN
 
             Button(
 

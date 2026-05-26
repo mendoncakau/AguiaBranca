@@ -103,8 +103,6 @@ fun DashboardLiderScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // HEADER
-
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -180,8 +178,6 @@ fun DashboardLiderScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // CARD PRINCIPAL
-
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(28.dp),
@@ -240,7 +236,6 @@ fun DashboardLiderScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // MÉTRICAS
 
         Text(
             text = "Indicadores",
@@ -303,8 +298,6 @@ fun DashboardLiderScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // IMPACTO FINANCEIRO
-
         Text(
             text = "Impacto financeiro",
             style = MaterialTheme.typography.titleLarge,
@@ -354,8 +347,6 @@ fun DashboardLiderScreen(
         }
 
         Spacer(modifier = Modifier.height(28.dp))
-
-        // STATUS
 
         Card(
             modifier = Modifier.fillMaxWidth(),

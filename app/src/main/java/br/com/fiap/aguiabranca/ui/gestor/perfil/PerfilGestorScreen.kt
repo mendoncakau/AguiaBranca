@@ -44,7 +44,6 @@ fun PerfilGestorScreen(
         mutableStateOf("Carregando...")
     }
 
-    // BUSCA NOME NO FIRESTORE
 
     LaunchedEffect(Unit) {
 
@@ -69,8 +68,6 @@ fun PerfilGestorScreen(
         }
     }
 
-    // INICIAIS AUTOMÁTICAS
-
     val iniciais = remember(nomeUsuario) {
 
         nomeUsuario
@@ -90,8 +87,6 @@ fun PerfilGestorScreen(
             .verticalScroll(rememberScrollState())
     ) {
 
-        // HEADER
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -105,8 +100,6 @@ fun PerfilGestorScreen(
                     )
                 )
         ) {
-
-            // BOTÃO SAIR
 
             IconButton(
 
@@ -141,8 +134,6 @@ fun PerfilGestorScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
 
-                    // AVATAR
-
                     Box(
                         modifier = Modifier
                             .size(95.dp)
@@ -163,8 +154,6 @@ fun PerfilGestorScreen(
                     Spacer(modifier = Modifier.width(18.dp))
 
                     Column {
-
-                        // NOME DO FIRESTORE
 
                         Text(
                             text = nomeUsuario,
@@ -206,8 +195,6 @@ fun PerfilGestorScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // CARD FUNCIONÁRIO
 
         Card(
             modifier = Modifier
@@ -299,8 +286,6 @@ fun PerfilGestorScreen(
         }
 
         Spacer(modifier = Modifier.height(34.dp))
-
-        // CARD RESUMO
 
         Card(
             modifier = Modifier

@@ -8,18 +8,21 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 private val AzulPrincipal = Color(0xFF0B57D0)
 private val AzulEscuro = Color(0xFF071B52)
@@ -44,7 +47,6 @@ fun DashboardGestorScreen(
             .verticalScroll(rememberScrollState())
     ) {
 
-        // HEADER
 
         Box(
             modifier = Modifier
@@ -189,7 +191,6 @@ fun DashboardGestorScreen(
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        // CARDS
 
         Row(
             modifier = Modifier
@@ -243,7 +244,6 @@ fun DashboardGestorScreen(
 
         Spacer(modifier = Modifier.height(28.dp))
 
-        // IMPACTO FINANCEIRO
 
         Card(
             modifier = Modifier
@@ -304,8 +304,6 @@ fun DashboardGestorScreen(
         }
 
         Spacer(modifier = Modifier.height(28.dp))
-
-        // STATUS
 
         Card(
             modifier = Modifier
@@ -384,6 +382,95 @@ fun DashboardGestorScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(28.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+
+            shape = RoundedCornerShape(28.dp),
+
+            colors = CardDefaults.cardColors(
+                containerColor = Branco
+            )
+        ) {
+
+            Column(
+                modifier = Modifier.padding(22.dp)
+            ) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Roxo.copy(alpha = 0.12f)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Default.Flag,
+                            contentDescription = null,
+                            tint = Roxo
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(14.dp))
+
+                    Column {
+
+                        Text(
+                            text = "Diretrizes ativas",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Texto
+                        )
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = "Direcionamentos estratégicos da empresa",
+                            color = Cinza,
+                            fontSize = 15.sp
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                DiretrizGestorCard(
+                    titulo = "Reduzir custos operacionais",
+                    descricao = "Buscar soluções para otimizar recursos e reduzir desperdícios.",
+                    categoria = "Estratégica",
+                    prioridade = "Alta prioridade"
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                DiretrizGestorCard(
+                    titulo = "Melhorar experiência do cliente",
+                    descricao = "Focar em ideias que aumentem satisfação e qualidade.",
+                    categoria = "Operacional",
+                    prioridade = "Média prioridade"
+                )
+
+                Spacer(modifier = Modifier.height(14.dp))
+
+                DiretrizGestorCard(
+                    titulo = "Aumentar eficiência logística",
+                    descricao = "Melhorias em rotas, processos e produtividade.",
+                    categoria = "Financeira",
+                    prioridade = "Baixa prioridade"
+                )
+            }
+        }
+
         Spacer(modifier = Modifier.height(120.dp))
     }
 }
@@ -432,6 +519,109 @@ fun DashboardCard(
                 text = titulo,
                 color = Cinza,
                 fontSize = 14.sp
+            )
+        }
+    }
+}
+
+@Composable
+fun DiretrizGestorCard(
+    titulo: String,
+    descricao: String,
+    categoria: String,
+    prioridade: String
+) {
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+
+        shape = RoundedCornerShape(24.dp),
+
+        colors = CardDefaults.cardColors(
+            containerColor = AzulClaro
+        )
+    ) {
+
+        Column(
+            modifier = Modifier.padding(20.dp)
+        ) {
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+
+                Surface(
+                    shape = RoundedCornerShape(50.dp),
+
+                    color = when (prioridade) {
+
+                        "Alta prioridade" ->
+                            Vermelho.copy(alpha = 0.12f)
+
+                        "Média prioridade" ->
+                            Roxo.copy(alpha = 0.12f)
+
+                        else ->
+                            Verde.copy(alpha = 0.12f)
+                    }
+                ) {
+
+                    Text(
+                        text = prioridade,
+
+                        modifier = Modifier.padding(
+                            horizontal = 14.dp,
+                            vertical = 8.dp
+                        ),
+
+                        fontWeight = FontWeight.Bold,
+
+                        color = when (prioridade) {
+
+                            "Alta prioridade" -> Vermelho
+
+                            "Média prioridade" -> Roxo
+
+                            else -> Verde
+                        }
+                    )
+                }
+
+                Surface(
+                    shape = RoundedCornerShape(50.dp),
+                    color = AzulPrincipal.copy(alpha = 0.12f)
+                ) {
+
+                    Text(
+                        text = categoria,
+
+                        modifier = Modifier.padding(
+                            horizontal = 14.dp,
+                            vertical = 8.dp
+                        ),
+
+                        color = AzulPrincipal,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            Text(
+                text = titulo,
+                fontSize = 21.sp,
+                fontWeight = FontWeight.Bold,
+                color = Texto
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = descricao,
+                color = Cinza,
+                lineHeight = 24.sp,
+                fontSize = 15.sp
             )
         }
     }
@@ -492,7 +682,7 @@ fun DonutChartPremium() {
         ) {
 
             val stroke =
-                Stroke(
+                androidx.compose.ui.graphics.drawscope.Stroke(
                     width = 30.dp.toPx()
                 )
 

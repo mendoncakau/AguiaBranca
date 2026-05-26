@@ -25,7 +25,6 @@ fun AppNavigation() {
         startDestination = "login"
     ) {
 
-        // LOGIN
 
         composable("login") {
 
@@ -34,7 +33,6 @@ fun AppNavigation() {
             )
         }
 
-        // HOME OPERADOR
 
         composable("homeOperador") {
 
@@ -49,7 +47,6 @@ fun AppNavigation() {
             )
         }
 
-        // HOME GESTOR
 
         composable("homeGestor") {
 
@@ -58,16 +55,12 @@ fun AppNavigation() {
             )
         }
 
-        // HOME LIDER
-
         composable("homeLider") {
 
             LiderScreen(
                 navController = navController
             )
         }
-
-        // NOVA IDEIA
 
         composable("novaIdeia") {
 
@@ -79,9 +72,6 @@ fun AppNavigation() {
                 }
             )
         }
-
-        // MINHAS IDEIAS
-
         composable("minhasIdeias") {
 
             MinhasIdeiasScreen(
@@ -89,16 +79,12 @@ fun AppNavigation() {
             )
         }
 
-        // PERFIL OPERADOR
-
         composable("perfilOperador") {
 
             PerfilOperadorScreen(
                 navController = navController
             )
         }
-
-        // DETALHES IDEIA
 
         composable(
             route = "detalhesIdeia/{titulo}",
