@@ -16,6 +16,7 @@ val AzulEscuro = Color(0xFF001B5E)
 val AmareloDestaque = Color(0xFFFFC107)
 
 
+val RoxoLider = Color(0xFF1565C0)
 
 // BACKGROUNDS
 val FundoTela = Color(0xFFF5F7FA)

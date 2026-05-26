@@ -3,348 +3,599 @@ package br.com.fiap.aguiabranca.ui.gestor.dashboard
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.TrendingUp
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 
-private val Azul = Color(0xFF0047C7)
-private val AzulEscuro = Color(0xFF06143A)
-private val Verde = Color(0xFF00995D)
+private val AzulPrincipal = Color(0xFF0B57D0)
+private val AzulEscuro = Color(0xFF071B52)
+private val AzulClaro = Color(0xFFEAF2FF)
+private val Verde = Color(0xFF14AE5C)
 private val Vermelho = Color(0xFFE53935)
-private val Roxo = Color(0xFF6A35C2)
-private val CinzaTexto = Color(0xFF5C6680)
-private val CinzaBorda = Color(0xFFE8EBF2)
-private val Fundo = Color(0xFFFAFBFD)
+private val Roxo = Color(0xFF7B61FF)
+private val Fundo = Color(0xFFF5F7FB)
+private val Branco = Color.White
+private val Texto = Color(0xFF172033)
+private val Cinza = Color(0xFF6E7891)
 
 @Composable
-fun DashboardGestorScreen(modifier: Modifier = Modifier) {
+fun DashboardGestorScreen(
+    modifier: Modifier = Modifier
+) {
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Fundo)
-            .padding(horizontal = 20.dp, vertical = 18.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+
+        // HEADER
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            AzulPrincipal,
+                            AzulEscuro
+                        )
+                    )
+                )
         ) {
-            Text(
-                text = "Dashboard",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = AzulEscuro,
-                fontFamily = FontFamily.SansSerif
-            )
 
-            Icon(
-                imageVector = Icons.Outlined.Notifications,
-                contentDescription = null,
-                tint = AzulEscuro,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(22.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            InfoCard(
-                titulo = "Ideias rec.",
-                valor = "23",
-                corValor = Azul,
-                modifier = Modifier.weight(1f)
-            )
-
-            InfoCard(
-                titulo = "Aprovadas",
-                valor = "10",
-                corValor = Verde,
-                modifier = Modifier.weight(1f)
-            )
-
-            InfoCard(
-                titulo = "Em Andamento",
-                valor = "8",
-                corValor = Verde,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Text(
-            text = "Impacto estimado (ROI)",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = AzulEscuro
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(2.dp)
-        ) {
             Column(
-                modifier = Modifier.padding(18.dp)
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(22.dp)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Investimento total",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = CinzaTexto
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = "R$ 120.000",
-                            fontSize = 23.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Azul
-                        )
-                    }
-
-                    DividerVertical()
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = "Retorno estimado",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = CinzaTexto
-                        )
-
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = "R$ 165.000",
-                            fontSize = 23.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Azul
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                Divider(color = CinzaBorda)
-
-                Spacer(modifier = Modifier.height(18.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement =
+                        Arrangement.SpaceBetween,
+                    verticalAlignment =
+                        Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "ROI total",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = CinzaTexto
-                    )
 
-                    Text(
-                        text = "R$ 45.000",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Verde
+                    Column {
+
+                        Text(
+                            text = "Dashboard",
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Branco
+                        )
+
+                        Spacer(
+                            modifier = Modifier.height(6.dp)
+                        )
+
+                        Text(
+                            text =
+                                "Visão estratégica da inovação",
+                            fontSize = 16.sp,
+                            color = Branco.copy(alpha = 0.85f)
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .size(52.dp)
+                            .clip(CircleShape)
+                            .background(
+                                Branco.copy(alpha = 0.15f)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Icon(
+                            imageVector =
+                                Icons.Outlined.Notifications,
+                            contentDescription = null,
+                            tint = Branco
+                        )
+                    }
+                }
+
+                Spacer(
+                    modifier = Modifier.height(30.dp)
+                )
+
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor =
+                            Branco.copy(alpha = 0.14f)
                     )
+                ) {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+
+                        verticalAlignment =
+                            Alignment.CenterVertically
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(54.dp)
+                                .clip(CircleShape)
+                                .background(
+                                    Branco.copy(alpha = 0.2f)
+                                ),
+
+                            contentAlignment =
+                                Alignment.Center
+                        ) {
+
+                            Icon(
+                                imageVector =
+                                    Icons.Default.TrendingUp,
+
+                                contentDescription = null,
+                                tint = Branco
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier.width(16.dp)
+                        )
+
+                        Column {
+
+                            Text(
+                                text = "ROI Total",
+                                color =
+                                    Branco.copy(alpha = 0.8f),
+
+                                fontSize = 15.sp
+                            )
+
+                            Spacer(
+                                modifier =
+                                    Modifier.height(4.dp)
+                            )
+
+                            Text(
+                                text = "R$ 45.000",
+                                color = Branco,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(30.dp))
-
-        Text(
-            text = "Ideias por status",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = AzulEscuro
-        )
 
         Spacer(modifier = Modifier.height(22.dp))
 
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(18.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(2.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(18.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                DonutChart()
+        // CARDS
 
-                Spacer(modifier = Modifier.width(22.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+
+            horizontalArrangement =
+                Arrangement.spacedBy(12.dp)
+        ) {
+
+            DashboardCard(
+                titulo = "Ideias recebidas",
+                valor = "23",
+                cor = AzulPrincipal,
+                modifier = Modifier.weight(1f)
+            )
+
+            DashboardCard(
+                titulo = "Aprovadas",
+                valor = "10",
+                cor = Verde,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+
+            horizontalArrangement =
+                Arrangement.spacedBy(12.dp)
+        ) {
+
+            DashboardCard(
+                titulo = "Em andamento",
+                valor = "8",
+                cor = Roxo,
+                modifier = Modifier.weight(1f)
+            )
+
+            DashboardCard(
+                titulo = "Projetos",
+                valor = "6",
+                cor = AzulEscuro,
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // IMPACTO FINANCEIRO
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+
+            shape = RoundedCornerShape(28.dp),
+
+            colors = CardDefaults.cardColors(
+                containerColor = Branco
+            )
+        ) {
+
+            Column(
+                modifier = Modifier.padding(22.dp)
+            ) {
+
+                Text(
+                    text = "Impacto financeiro",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Texto
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text =
+                        "Indicadores estratégicos da operação",
+                    color = Cinza,
+                    fontSize = 15.sp
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                FinanceiroItem(
+                    titulo = "Investimento total",
+                    valor = "R$ 120.000",
+                    cor = AzulPrincipal
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                FinanceiroItem(
+                    titulo = "Retorno estimado",
+                    valor = "R$ 165.000",
+                    cor = Verde
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                FinanceiroItem(
+                    titulo = "Lucro estimado",
+                    valor = "R$ 45.000",
+                    cor = Roxo
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // STATUS
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+
+            shape = RoundedCornerShape(28.dp),
+
+            colors = CardDefaults.cardColors(
+                containerColor = Branco
+            )
+        ) {
+
+            Column(
+                modifier = Modifier.padding(22.dp)
+            ) {
+
+                Text(
+                    text = "Ideias por status",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Texto
+                )
+
+                Spacer(modifier = Modifier.height(26.dp))
 
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
-                    modifier = Modifier.weight(1f)
+                    horizontalAlignment =
+                        Alignment.CenterHorizontally,
+
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    LegendItem(Azul, "Em análise", "8 (34%)")
-                    LegendItem(Verde, "Aprovadas", "10 (43%)")
-                    LegendItem(Vermelho, "Rejeitadas", "3 (13%)")
-                    LegendItem(Roxo, "Viraram projeto", "2 (10%)")
+
+                    DonutChartPremium()
+
+                    Spacer(
+                        modifier = Modifier.height(26.dp)
+                    )
+
+                    LegendPremium(
+                        cor = AzulPrincipal,
+                        titulo = "Em análise",
+                        valor = "8 ideias"
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
+
+                    LegendPremium(
+                        cor = Verde,
+                        titulo = "Aprovadas",
+                        valor = "10 ideias"
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
+
+                    LegendPremium(
+                        cor = Vermelho,
+                        titulo = "Rejeitadas",
+                        valor = "3 ideias"
+                    )
+
+                    Spacer(
+                        modifier = Modifier.height(14.dp)
+                    )
+
+                    LegendPremium(
+                        cor = Roxo,
+                        titulo = "Projetos",
+                        valor = "2 ideias"
+                    )
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(120.dp))
     }
 }
 
 @Composable
-private fun InfoCard(
+fun DashboardCard(
     titulo: String,
     valor: String,
-    corValor: Color,
+    cor: Color,
     modifier: Modifier = Modifier
 ) {
+
     Card(
-        modifier = modifier.height(112.dp),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(2.dp)
+        modifier = modifier,
+
+        shape = RoundedCornerShape(24.dp),
+
+        colors = CardDefaults.cardColors(
+            containerColor = Branco
+        )
     ) {
+
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.padding(20.dp)
         ) {
-            Text(
-                text = titulo,
-                fontSize = 13.sp,
-                lineHeight = 15.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = CinzaTexto,
-                fontFamily = FontFamily.SansSerif
+
+            Box(
+                modifier = Modifier
+                    .size(14.dp)
+                    .clip(CircleShape)
+                    .background(cor)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
                 text = valor,
-                fontSize = 30.sp,
+                fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
-                color = corValor,
-                fontFamily = FontFamily.SansSerif
+                color = cor
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = titulo,
+                color = Cinza,
+                fontSize = 14.sp
             )
         }
     }
 }
 
 @Composable
-private fun DividerVertical() {
-    Box(
-        modifier = Modifier
-            .height(70.dp)
-            .width(1.dp)
-            .background(CinzaBorda)
-    )
-}
+fun FinanceiroItem(
+    titulo: String,
+    valor: String,
+    cor: Color
+) {
 
-@Composable
-private fun DonutChart() {
-    Canvas(
-        modifier = Modifier.size(120.dp)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+
+        horizontalArrangement =
+            Arrangement.SpaceBetween,
+
+        verticalAlignment =
+            Alignment.CenterVertically
     ) {
-        val stroke = Stroke(
-            width = 22.dp.toPx(),
-            cap = StrokeCap.Butt
+
+        Text(
+            text = titulo,
+            color = Texto,
+            fontSize = 16.sp
         )
 
-        val chartSize = Size(size.width, size.height)
+        Surface(
+            shape = RoundedCornerShape(50.dp),
+            color = cor.copy(alpha = 0.12f)
+        ) {
 
-        drawArc(
-            color = Azul,
-            startAngle = -90f,
-            sweepAngle = 122f,
-            useCenter = false,
-            size = chartSize,
-            style = stroke
-        )
+            Text(
+                text = valor,
 
-        drawArc(
-            color = Verde,
-            startAngle = 36f,
-            sweepAngle = 155f,
-            useCenter = false,
-            size = chartSize,
-            style = stroke
-        )
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,
+                    vertical = 8.dp
+                ),
 
-        drawArc(
-            color = Vermelho,
-            startAngle = 195f,
-            sweepAngle = 47f,
-            useCenter = false,
-            size = chartSize,
-            style = stroke
-        )
-
-        drawArc(
-            color = Roxo,
-            startAngle = 246f,
-            sweepAngle = 38f,
-            useCenter = false,
-            size = chartSize,
-            style = stroke
-        )
+                color = cor,
+                fontWeight = FontWeight.Bold
+            )
+        }
     }
 }
 
 @Composable
-private fun LegendItem(
+fun DonutChartPremium() {
+
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+
+        Canvas(
+            modifier = Modifier.size(180.dp)
+        ) {
+
+            val stroke =
+                Stroke(
+                    width = 30.dp.toPx()
+                )
+
+            rotate(-90f) {
+
+                drawArc(
+                    color = AzulPrincipal,
+                    startAngle = 0f,
+                    sweepAngle = 120f,
+                    useCenter = false,
+                    style = stroke
+                )
+
+                drawArc(
+                    color = Verde,
+                    startAngle = 120f,
+                    sweepAngle = 150f,
+                    useCenter = false,
+                    style = stroke
+                )
+
+                drawArc(
+                    color = Vermelho,
+                    startAngle = 270f,
+                    sweepAngle = 40f,
+                    useCenter = false,
+                    style = stroke
+                )
+
+                drawArc(
+                    color = Roxo,
+                    startAngle = 310f,
+                    sweepAngle = 50f,
+                    useCenter = false,
+                    style = stroke
+                )
+            }
+        }
+
+        Column(
+            horizontalAlignment =
+                Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "23",
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                color = Texto
+            )
+
+            Text(
+                text = "Ideias",
+                color = Cinza
+            )
+        }
+    }
+}
+
+@Composable
+fun LegendPremium(
     cor: Color,
-    texto: String,
+    titulo: String,
     valor: String
 ) {
+
     Row(
         modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+
+        horizontalArrangement =
+            Arrangement.SpaceBetween,
+
+        verticalAlignment =
+            Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(13.dp)
-                .background(cor, CircleShape)
-        )
 
-        Spacer(modifier = Modifier.width(10.dp))
+        Row(
+            verticalAlignment =
+                Alignment.CenterVertically
+        ) {
 
-        Text(
-            text = texto,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
-            color = CinzaTexto,
-            modifier = Modifier.weight(1f)
-        )
+            Box(
+                modifier = Modifier
+                    .size(14.dp)
+                    .clip(CircleShape)
+                    .background(cor)
+            )
+
+            Spacer(
+                modifier = Modifier.width(12.dp)
+            )
+
+            Text(
+                text = titulo,
+                fontSize = 15.sp,
+                color = Texto
+            )
+        }
 
         Text(
             text = valor,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = AzulEscuro
+            fontWeight = FontWeight.Bold,
+            color = Texto
         )
     }
 }

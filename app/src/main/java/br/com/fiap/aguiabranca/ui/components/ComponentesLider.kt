@@ -128,7 +128,7 @@ fun BottomBarLider(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
-                indicatorColor = Color(0xFFDCE8FF)
+                indicatorColor = Color(0xFFD6E9FF)
             )
         )
 
@@ -140,7 +140,7 @@ fun BottomBarLider(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
-                indicatorColor = Color(0xFFE7D7FF)
+                indicatorColor = Color(0xFFD6E9FF)
             )
         )
 
@@ -152,7 +152,7 @@ fun BottomBarLider(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
-                indicatorColor = Color(0xFFE7D7FF)
+                indicatorColor = Color(0xFFD6E9FF)
             )
         )
 
@@ -164,7 +164,7 @@ fun BottomBarLider(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = RoxoLider,
                 selectedTextColor = RoxoLider,
-                indicatorColor = Color(0xFFE7D7FF)
+                indicatorColor = Color(0xFFD6E9FF)
             )
         )
     }

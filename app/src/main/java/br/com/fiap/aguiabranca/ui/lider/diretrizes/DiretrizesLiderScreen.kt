@@ -13,53 +13,70 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import br.com.fiap.aguiabranca.ui.components.*
-import br.com.fiap.aguiabranca.ui.lider.TelaLider
-import br.com.fiap.aguiabranca.ui.theme.FundoTela
-import br.com.fiap.aguiabranca.ui.theme.PretoTexto
+import br.com.fiap.aguiabranca.ui.components.CardDiretriz
+import br.com.fiap.aguiabranca.ui.components.TopoTelaLider
+import br.com.fiap.aguiabranca.ui.theme.*
 import br.com.fiap.aguiabranca.viewmodel.LiderViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun DiretrizesLiderScreen(
-    viewModel: LiderViewModel,
-    telaAtual: TelaLider,
-    onTelaSelecionada: (TelaLider) -> Unit
+    modifier: Modifier = Modifier,
+    viewModel: LiderViewModel
 ) {
+
     val diretrizes by viewModel.diretrizes.collectAsState()
 
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHostState = remember {
+        SnackbarHostState()
+    }
+
     val scope = rememberCoroutineScope()
 
-    var mostrarDialogNova by remember { mutableStateOf(false) }
-    var mostrarDialogEditar by remember { mutableStateOf(false) }
+    var mostrarDialogNova by remember {
+        mutableStateOf(false)
+    }
 
-    var titulo by remember { mutableStateOf("") }
-    var descricao by remember { mutableStateOf("") }
+    var mostrarDialogEditar by remember {
+        mutableStateOf(false)
+    }
 
-    var diretrizEditandoId by remember { mutableStateOf<Int?>(null) }
-    var diretrizParaExcluir by remember { mutableStateOf<Int?>(null) }
+    var titulo by remember {
+        mutableStateOf("")
+    }
 
-    var categoria by remember { mutableStateOf("Estratégica") }
-    var prioridade by remember { mutableStateOf("Alta prioridade") }
+    var descricao by remember {
+        mutableStateOf("")
+    }
+
+    var diretrizEditandoId by remember {
+        mutableStateOf<Int?>(null)
+    }
+
+    var diretrizParaExcluir by remember {
+        mutableStateOf<Int?>(null)
+    }
+
+    var categoria by remember {
+        mutableStateOf("Estratégica")
+    }
+
+    var prioridade by remember {
+        mutableStateOf("Alta prioridade")
+    }
 
     Scaffold(
+
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         },
 
-        bottomBar = {
-            BottomBarLider(
-                telaAtual = telaAtual,
-                onTelaSelecionada = onTelaSelecionada
-            )
-        },
-
         containerColor = FundoTela
+
     ) { paddingValues ->
 
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .background(FundoTela)
                 .padding(paddingValues)
@@ -73,16 +90,22 @@ fun DiretrizesLiderScreen(
             )
 
             Button(
+
                 onClick = {
+
                     titulo = ""
                     descricao = ""
+
                     mostrarDialogNova = true
                 },
+
                 colors = ButtonDefaults.buttonColors(
                     containerColor = RoxoLider
                 ),
+
                 modifier = Modifier.fillMaxWidth()
             ) {
+
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null
@@ -110,37 +133,57 @@ fun DiretrizesLiderScreen(
             diretrizes.forEach { diretriz ->
 
                 CardDiretriz(
+
                     titulo = diretriz.titulo,
+
                     descricao = diretriz.descricao,
+
                     categoria = diretriz.categoria,
+
                     prioridade = diretriz.prioridade,
+
                     onEditar = {
+
                         diretrizEditandoId = diretriz.id
+
                         titulo = diretriz.titulo
                         descricao = diretriz.descricao
+
                         categoria = diretriz.categoria
+
                         prioridade = diretriz.prioridade
+
                         mostrarDialogEditar = true
                     },
+
                     onExcluir = {
+
                         diretrizParaExcluir = diretriz.id
                     }
                 )
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(120.dp))
         }
     }
+
+    // =========================
+    // NOVA DIRETRIZ
+    // =========================
 
     if (mostrarDialogNova) {
 
         AlertDialog(
+
             onDismissRequest = {
+
                 mostrarDialogNova = false
             },
 
             confirmButton = {
+
                 TextButton(
+
                     onClick = {
 
                         viewModel.adicionarDiretriz(
@@ -153,41 +196,52 @@ fun DiretrizesLiderScreen(
                         mostrarDialogNova = false
 
                         scope.launch {
+
                             snackbarHostState.showSnackbar(
                                 "✓ Diretriz criada com sucesso"
                             )
                         }
                     }
                 ) {
+
                     Text("Salvar")
                 }
             },
 
             dismissButton = {
+
                 TextButton(
+
                     onClick = {
+
                         mostrarDialogNova = false
                     }
                 ) {
+
                     Text("Cancelar")
                 }
             },
 
             title = {
+
                 Text("Nova diretriz")
             },
 
             text = {
+
                 Column {
 
                     OutlinedTextField(
                         value = titulo,
+
                         onValueChange = {
                             titulo = it
                         },
+
                         label = {
                             Text("Título")
                         },
+
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -197,12 +251,15 @@ fun DiretrizesLiderScreen(
 
                     OutlinedTextField(
                         value = descricao,
+
                         onValueChange = {
                             descricao = it
                         },
+
                         label = {
                             Text("Descrição")
                         },
+
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -210,15 +267,23 @@ fun DiretrizesLiderScreen(
         )
     }
 
+    // =========================
+    // EDITAR DIRETRIZ
+    // =========================
+
     if (mostrarDialogEditar) {
 
         AlertDialog(
+
             onDismissRequest = {
+
                 mostrarDialogEditar = false
             },
 
             confirmButton = {
+
                 TextButton(
+
                     onClick = {
 
                         diretrizEditandoId?.let {
@@ -235,41 +300,52 @@ fun DiretrizesLiderScreen(
                         mostrarDialogEditar = false
 
                         scope.launch {
+
                             snackbarHostState.showSnackbar(
                                 "✓ Diretriz atualizada com sucesso"
                             )
                         }
                     }
                 ) {
+
                     Text("Salvar")
                 }
             },
 
             dismissButton = {
+
                 TextButton(
+
                     onClick = {
+
                         mostrarDialogEditar = false
                     }
                 ) {
+
                     Text("Cancelar")
                 }
             },
 
             title = {
+
                 Text("Editar diretriz")
             },
 
             text = {
+
                 Column {
 
                     OutlinedTextField(
                         value = titulo,
+
                         onValueChange = {
                             titulo = it
                         },
+
                         label = {
                             Text("Título")
                         },
+
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -279,52 +355,82 @@ fun DiretrizesLiderScreen(
 
                     OutlinedTextField(
                         value = descricao,
+
                         onValueChange = {
                             descricao = it
                         },
+
                         label = {
                             Text("Descrição")
                         },
+
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
         )
     }
+
+    // =========================
+    // EXCLUIR DIRETRIZ
+    // =========================
+
     if (diretrizParaExcluir != null) {
+
         AlertDialog(
+
             onDismissRequest = {
+
                 diretrizParaExcluir = null
             },
+
             title = {
+
                 Text("Excluir diretriz")
             },
+
             text = {
-                Text("Tem certeza que deseja remover esta diretriz?")
+
+                Text(
+                    "Tem certeza que deseja remover esta diretriz?"
+                )
             },
+
             confirmButton = {
+
                 TextButton(
+
                     onClick = {
-                        viewModel.excluirDiretriz(diretrizParaExcluir!!)
+
+                        viewModel.excluirDiretriz(
+                            diretrizParaExcluir!!
+                        )
 
                         diretrizParaExcluir = null
 
                         scope.launch {
+
                             snackbarHostState.showSnackbar(
                                 "✓ Diretriz removida com sucesso"
                             )
                         }
                     }
                 ) {
+
                     Text("Excluir")
                 }
             },
+
             dismissButton = {
+
                 TextButton(
+
                     onClick = {
+
                         diretrizParaExcluir = null
                     }
                 ) {
+
                     Text("Cancelar")
                 }
             }

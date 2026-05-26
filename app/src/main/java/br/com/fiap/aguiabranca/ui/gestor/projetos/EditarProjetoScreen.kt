@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -27,6 +29,9 @@ fun EditarProjetoScreen(
     progressoInicial: Float,
     investimentoInicial: String,
     retornoInicial: String,
+
+    onFechar: () -> Unit,
+
     onSalvar: (
         nome: String,
         prioridade: String,
@@ -36,12 +41,30 @@ fun EditarProjetoScreen(
         retorno: String
     ) -> Unit
 ) {
-    var nome by remember { mutableStateOf(nomeInicial) }
-    var prioridade by remember { mutableStateOf(prioridadeInicial) }
-    var status by remember { mutableStateOf(statusInicial) }
-    var progresso by remember { mutableFloatStateOf(progressoInicial) }
-    var investimento by remember { mutableStateOf(investimentoInicial) }
-    var retorno by remember { mutableStateOf(retornoInicial) }
+
+    var nome by remember {
+        mutableStateOf(nomeInicial)
+    }
+
+    var prioridade by remember {
+        mutableStateOf(prioridadeInicial)
+    }
+
+    var status by remember {
+        mutableStateOf(statusInicial)
+    }
+
+    var progresso by remember {
+        mutableFloatStateOf(progressoInicial)
+    }
+
+    var investimento by remember {
+        mutableStateOf(investimentoInicial)
+    }
+
+    var retorno by remember {
+        mutableStateOf(retornoInicial)
+    }
 
     Column(
         modifier = modifier
@@ -50,16 +73,34 @@ fun EditarProjetoScreen(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 18.dp, vertical = 18.dp)
     ) {
-        HeaderEditarProjeto {
-            onSalvar(nome, prioridade, status, progresso, investimento, retorno)
-        }
+
+        HeaderEditarProjeto(
+
+            onFechar = {
+                onFechar()
+            },
+
+            onSalvar = {
+
+                onSalvar(
+                    nome,
+                    prioridade,
+                    status,
+                    progresso,
+                    investimento,
+                    retorno
+                )
+            }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
         CampoTexto(
             titulo = "Nome do projeto",
             valor = nome,
-            onChange = { nome = it }
+            onChange = {
+                nome = it
+            }
         )
 
         CampoTextoBloqueado(
@@ -76,16 +117,31 @@ fun EditarProjetoScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            BotaoOpcao("Baixa", prioridade == "Baixa", Modifier.weight(1f)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+
+            BotaoOpcao(
+                texto = "Baixa",
+                selecionado = prioridade == "Baixa",
+                modifier = Modifier.weight(1f)
+            ) {
                 prioridade = "Baixa"
             }
 
-            BotaoOpcao("Média", prioridade == "Média", Modifier.weight(1f)) {
+            BotaoOpcao(
+                texto = "Média",
+                selecionado = prioridade == "Média",
+                modifier = Modifier.weight(1f)
+            ) {
                 prioridade = "Média"
             }
 
-            BotaoOpcao("Alta", prioridade == "Alta", Modifier.weight(1f)) {
+            BotaoOpcao(
+                texto = "Alta",
+                selecionado = prioridade == "Alta",
+                modifier = Modifier.weight(1f)
+            ) {
                 prioridade = "Alta"
             }
         }
@@ -101,16 +157,31 @@ fun EditarProjetoScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            BotaoOpcao("Aprovado", status == "Aprovado", Modifier.weight(1f)) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            BotaoOpcao(
+                texto = "Aprovado",
+                selecionado = status == "Aprovado",
+                modifier = Modifier.weight(1f)
+            ) {
                 status = "Aprovado"
             }
 
-            BotaoOpcao("Andamento", status == "Andamento", Modifier.weight(1f)) {
+            BotaoOpcao(
+                texto = "Andamento",
+                selecionado = status == "Andamento",
+                modifier = Modifier.weight(1f)
+            ) {
                 status = "Andamento"
             }
 
-            BotaoOpcao("Rejeitado", status == "Rejeitado", Modifier.weight(1f)) {
+            BotaoOpcao(
+                texto = "Rejeitado",
+                selecionado = status == "Rejeitado",
+                modifier = Modifier.weight(1f)
+            ) {
                 status = "Rejeitado"
             }
         }
@@ -126,11 +197,19 @@ fun EditarProjetoScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
             Slider(
                 value = progresso,
-                onValueChange = { progresso = it },
+
+                onValueChange = {
+                    progresso = it
+                },
+
                 modifier = Modifier.weight(1f),
+
                 colors = SliderDefaults.colors(
                     thumbColor = Azul,
                     activeTrackColor = Azul
@@ -152,13 +231,17 @@ fun EditarProjetoScreen(
         CampoTexto(
             titulo = "Investimento (R$)",
             valor = investimento,
-            onChange = { investimento = it }
+            onChange = {
+                investimento = it
+            }
         )
 
         CampoTexto(
             titulo = "Retorno estimado (R$)",
             valor = retorno,
-            onChange = { retorno = it }
+            onChange = {
+                retorno = it
+            }
         )
 
         Spacer(modifier = Modifier.height(120.dp))
@@ -167,14 +250,26 @@ fun EditarProjetoScreen(
 
 @Composable
 private fun HeaderEditarProjeto(
+    onFechar: () -> Unit,
     onSalvar: () -> Unit
 ) {
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Spacer(modifier = Modifier.width(48.dp))
+
+        IconButton(
+            onClick = onFechar
+        ) {
+
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Fechar",
+                tint = AzulEscuro
+            )
+        }
 
         Text(
             text = "Editar projeto",
@@ -183,7 +278,10 @@ private fun HeaderEditarProjeto(
             color = AzulEscuro
         )
 
-        TextButton(onClick = onSalvar) {
+        TextButton(
+            onClick = onSalvar
+        ) {
+
             Text(
                 text = "Salvar",
                 color = Azul,
@@ -200,6 +298,7 @@ private fun CampoTexto(
     valor: String,
     onChange: (String) -> Unit
 ) {
+
     Text(
         text = titulo,
         fontSize = 13.sp,
@@ -211,10 +310,15 @@ private fun CampoTexto(
 
     OutlinedTextField(
         value = valor,
+
         onValueChange = onChange,
+
         modifier = Modifier.fillMaxWidth(),
+
         shape = RoundedCornerShape(12.dp),
+
         singleLine = true,
+
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Azul,
             unfocusedBorderColor = Borda,
@@ -231,6 +335,7 @@ private fun CampoTextoBloqueado(
     titulo: String,
     valor: String
 ) {
+
     Text(
         text = titulo,
         fontSize = 13.sp,
@@ -243,9 +348,13 @@ private fun CampoTextoBloqueado(
     OutlinedTextField(
         value = valor,
         onValueChange = {},
+
         modifier = Modifier.fillMaxWidth(),
+
         shape = RoundedCornerShape(12.dp),
+
         singleLine = true,
+
         readOnly = true,
         enabled = false
     )
@@ -260,15 +369,23 @@ private fun BotaoOpcao(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
+
     Button(
         onClick = onClick,
+
         modifier = modifier.height(42.dp),
+
         shape = RoundedCornerShape(12.dp),
+
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (selecionado) Azul else Color.White,
-            contentColor = if (selecionado) Color.White else AzulEscuro
+            containerColor =
+                if (selecionado) Azul else Color.White,
+
+            contentColor =
+                if (selecionado) Color.White else AzulEscuro
         )
     ) {
+
         Text(
             text = texto,
             fontSize = 12.sp,

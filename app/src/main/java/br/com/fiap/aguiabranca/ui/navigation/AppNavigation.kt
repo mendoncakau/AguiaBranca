@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import br.com.fiap.aguiabranca.ui.autenticacao.LoginScreen
+import br.com.fiap.aguiabranca.ui.gestor.GestorScreen
+import br.com.fiap.aguiabranca.ui.lider.LiderScreen
 import br.com.fiap.aguiabranca.ui.operador.home.HomeOperadorScreen
 import br.com.fiap.aguiabranca.ui.operador.ideias.DetalhesIdeiaScreen
 import br.com.fiap.aguiabranca.ui.operador.ideias.MinhasIdeiasScreen
@@ -47,6 +49,24 @@ fun AppNavigation() {
             )
         }
 
+        // HOME GESTOR
+
+        composable("homeGestor") {
+
+            GestorScreen(
+                navController = navController
+            )
+        }
+
+        // HOME LIDER
+
+        composable("homeLider") {
+
+            LiderScreen(
+                navController = navController
+            )
+        }
+
         // NOVA IDEIA
 
         composable("novaIdeia") {
@@ -69,7 +89,7 @@ fun AppNavigation() {
             )
         }
 
-        // PERFIL
+        // PERFIL OPERADOR
 
         composable("perfilOperador") {
 
@@ -96,16 +116,6 @@ fun AppNavigation() {
                 navController = navController,
                 tituloIdeia = titulo
             )
-        }
-
-        // FUTURAS TELAS
-
-        composable("homeGestor") {
-
-        }
-
-        composable("homeLider") {
-
         }
     }
 }

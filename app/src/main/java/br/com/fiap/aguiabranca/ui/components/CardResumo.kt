@@ -1,4 +1,4 @@
-package br.com.fiap.aguiabranca.ui.componentes
+package br.com.fiap.aguiabranca.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
